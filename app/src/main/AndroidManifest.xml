@@ -27,6 +27,9 @@
             android:name=".Analista"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".tela.GestorActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
