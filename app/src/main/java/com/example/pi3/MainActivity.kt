@@ -35,9 +35,13 @@ class MainActivity : AppCompatActivity() {
             val login = tLogin.text.toString()
             val senha = tSenha.text.toString()
 
-            if (login == "teste" && senha == "123") {
-                // Navega para a próxima tela
+            if (login == "analista" && senha == "123") {
+                // Navega para a tela do Analista
                 val intent = Intent(getContext(), Analista::class.java)
+                startActivity(intent)
+            } else if (login == "coordenador" && senha == "123") {
+                // Navega para a tela do Coordenador
+                val intent = Intent(getContext(), Coordenador::class.java)
                 startActivity(intent)
             } else {
                 alert("Login e senha incorretos.")
@@ -52,5 +56,4 @@ class MainActivity : AppCompatActivity() {
     private fun alert(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-        }
+}
