@@ -1,4 +1,4 @@
-package com.example.pi3
+package com.example.pi3.coordenador
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pi3.MainActivity
+import com.example.pi3.R
 
 class Coordenador : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

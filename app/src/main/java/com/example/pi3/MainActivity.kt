@@ -11,6 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.pi3.apoio.Analista
+import com.example.pi3.coordenador.Coordenador
+import com.example.pi3.gestor.Gestor
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,10 @@ class MainActivity : AppCompatActivity() {
             } else if (login == "coordenador" && senha == "123") {
                 // Navega para a tela do Coordenador
                 val intent = Intent(getContext(), Coordenador::class.java)
+                startActivity(intent)
+            } else if (login == "gestor" && senha == "123") {
+                // Navega para a tela do Gestor
+                val intent = Intent(getContext(), Gestor::class.java)
                 startActivity(intent)
             } else {
                 alert("Login e senha incorretos.")
