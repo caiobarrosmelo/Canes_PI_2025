@@ -27,11 +27,14 @@
             android:name=".Analista"
             android:exported="true">
         </activity>
-
         <activity
             android:name=".Coordenador"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".tela.GestorActivity"
+            android:exported="true">
+          </activity>
     </application>
 
 </manifest>
