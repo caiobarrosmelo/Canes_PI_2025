@@ -35,7 +35,7 @@
 > Aqui serão disponibilizados os links para documentos relacionados, como:
 > - [Documento de requisitos](https://www.notion.so/Especifica-o-de-Requisitos-do-Sistema-1b965e19a7b3805e8a66e4fadebe0748)
 > - [Protótipo](https://www.figma.com/proto/VKRKXyLgakN3exJ1mfqr1s/Projeto-3?node-id=32-6&p=f&t=DGhV8zuVcv1GAs9W-1&scaling=scale-down&content-scaling=fixed&page-id=32%3A3&starting-point-node-id=32%3A6)
-> - Apresentações
+> - [Pesquisa UX](https://miro.com/app/board/uXjVIAXIpJo=/?share_link_id=795294644843)
 > - Outros materiais relevantes
 
 ---
