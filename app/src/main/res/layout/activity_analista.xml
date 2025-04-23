@@ -26,9 +26,11 @@
         <Spinner
             android:id="@+id/spinnerPilar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:layout_marginBottom="12dp"/>
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown"  />
+
 
         <!-- Botão Registrar Nova Ação -->
         <Button
@@ -36,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
+            android:layout_marginTop="20dp"
             android:text="Registrar nova ação"
             android:textColor="#004A8D"
             android:drawableLeft="@drawable/baseline_add_circle_outline_24"
