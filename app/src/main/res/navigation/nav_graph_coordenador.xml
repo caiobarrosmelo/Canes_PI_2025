@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.pi3.coordenador.HomeCoordenadorFragment"
+        android:label="@string/inicial"
+        tools:layout="@layout/fragment_home_coordenador">
+    <action
+        android:id="@+id/action_homeCoordenador_to_registrar"
+        app:destination="@id/navigation_actionRegister" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_acoes"
+        android:name="com.example.pi3.coordenador.ActionUnapprovedFragment"
+        android:label="@string/acoes"
+        tools:layout="@layout/fragment_unapproved_coordenador" />
+
+    <fragment
+        android:id="@+id/navigation_atividades"
+        android:name="com.example.pi3.coordenador.ActivitiesUnapprovedFragment"
+        android:label="@string/atividades"
+        tools:layout="@layout/fragment_activities_unapproved" />
+
+    <fragment
+        android:id="@+id/navigation_actionRegister"
+        android:name="com.example.pi3.coordenador.ActionRegisterFragment"
+        android:label="@string/atividades"
+        tools:layout="@layout/fragment_action_register">
+        <argument
+        android:name="pilarSelecionado"
+        app:argType="string" />
+    </fragment>
+
+</navigation>
