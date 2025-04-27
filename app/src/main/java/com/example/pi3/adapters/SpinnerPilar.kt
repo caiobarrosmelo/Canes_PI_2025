@@ -1,5 +1,6 @@
 package com.example.pi3.adapters
 
+import com.example.pi3.R
 import android.content.Context
 import android.view.View
 import android.widget.AdapterView
@@ -19,9 +20,15 @@ fun setupPilarSpinner(
         "Auditoria e Monitoramento"
     )
 
-    val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, pilares)
-    spinner.adapter = adapter
+    // usa nosso layout customizado para o texto colorido
+    val adapter = ArrayAdapter(
+        context,
+        R.layout.spinner_item,
+        pilares
+    )
+    adapter.setDropDownViewResource(R.layout.spinner_item)
 
+    spinner.adapter = adapter
     spinner.setSelection(0)
 
     spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -35,7 +42,7 @@ fun setupPilarSpinner(
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {
-            // Você pode tratar algo aqui, se quiser
+            // sem seleção
         }
     }
 }
