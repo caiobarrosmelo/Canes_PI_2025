@@ -19,7 +19,7 @@ import com.example.pi3.adapters.setupPilarSpinner
 import com.example.pi3.data.ActionRepository
 
 
-class HomeCoordenadorFragment : Fragment() {
+class HomeCoordenadorFragment : Fragment(), OnActionClickListener {
 
     private lateinit var spinnerPilar: Spinner
     private lateinit var recyclerView: RecyclerView
@@ -55,11 +55,23 @@ class HomeCoordenadorFragment : Fragment() {
                 .actionHomeCoordenadorToRegistrar(pilarSelecionado)
             findNavController().navigate(action)
         }
+
+
     }
 
     private fun carregarAcoesAprovadas(pilar: String) {
         val acoes = repository.getApprovedActionsByPillar(pilar)
-        recyclerView.adapter = ActionApprovedAdapter(acoes, repository)
+        recyclerView.adapter = ActionApprovedAdapter(acoes, repository, this)
     }
+
+    override fun onEditarAcaoClicked(acaoId: Long) {
+        val pilarSelecionado = spinnerPilar.selectedItem.toString()
+        val action = HomeCoordenadorFragmentDirections
+            .actionHomeCoordenadorToEditAction(pilarSelecionado, acaoId)
+        findNavController().navigate(action)
+    }
+
+
+
 }
 

@@ -13,6 +13,9 @@
     <action
         android:id="@+id/action_homeCoordenador_to_registrar"
         app:destination="@id/navigation_actionRegister" />
+        <action
+            android:id="@+id/action_homeCoordenador_to_editAction"
+            app:destination="@id/navigation_editAction" />
     </fragment>
 
     <fragment
@@ -20,6 +23,21 @@
         android:name="com.example.pi3.coordenador.ActionUnapprovedFragment"
         android:label="@string/acoes"
         tools:layout="@layout/fragment_unapproved_coordenador" />
+
+    <fragment
+        android:id="@+id/navigation_editAction"
+        android:name="com.example.pi3.coordenador.EditAction"
+        tools:layout="@layout/fragment_edit_action">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L"
+            />
+        <argument
+            android:name="pilarSelecionado"
+            app:argType="string" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/navigation_atividades"
