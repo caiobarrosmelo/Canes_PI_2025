@@ -2,6 +2,7 @@ package com.example.pi3.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 
@@ -144,6 +145,73 @@ class ActionRepository(context: Context) {
         }
         db.insert("actions", null, values)
     }
+
+    fun updateAction(action: Action) {
+        val db = dbHelper.writableDatabase
+        val contentValues = ContentValues().apply {
+            put(TableActions.COLUMN_TITULO, action.titulo)
+            put(TableActions.COLUMN_DESCRICAO, action.descricao)
+            put(TableActions.COLUMN_RESPONSAVEL, action.responsavel)
+            put(TableActions.COLUMN_ORCAMENTO, action.orcamento)
+            put(TableActions.COLUMN_DATA_INICIO, action.dataInicio)
+            put(TableActions.COLUMN_DATA_FIM, action.dataFim)
+        }
+
+        // Usando db.update para atualizar a ação
+        val rowsUpdated = db.update(
+            TableActions.TABLE_NAME,   // Nome da tabela
+            contentValues,             // Valores a serem atualizados
+            "${TableActions.COLUMN_ID} = ?", // Condição para identificar a linha
+            arrayOf(action.id.toString())  // Parâmetros da condição
+        )
+
+        if (rowsUpdated > 0) {
+            // Sucesso na atualização
+            Log.d("UpdateAction", "Ação atualizada com sucesso!")
+        } else {
+            // Se nenhuma linha foi atualizada, significa que não havia uma ação com o ID fornecido
+            Log.d("UpdateAction", "Nenhuma ação foi atualizada. Verifique o ID.")
+        }
+
+        // Fechar o banco de dados após a operação
+        db.close()
+    }
+
+    fun getActionById(id: Long): Action? {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.query(
+            TableActions.TABLE_NAME,
+            null, // Todas as colunas
+            "${TableActions.COLUMN_ID} = ?",
+            arrayOf(id.toString()),
+            null,
+            null,
+            null
+        )
+
+        cursor.use { // Fecha o cursor automaticamente depois do bloco
+            if (it.moveToFirst()) {
+                return Action(
+                    id = it.getLong(it.getColumnIndexOrThrow(TableActions.COLUMN_ID)),
+                    titulo = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_TITULO)),
+                    descricao = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_DESCRICAO)),
+                    responsavel = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_RESPONSAVEL)),
+                    orcamento = it.getDouble(it.getColumnIndexOrThrow(TableActions.COLUMN_ORCAMENTO)),
+                    dataInicio = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_DATA_INICIO)),
+                    dataFim = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_DATA_FIM)),
+                    pilar = it.getString(it.getColumnIndexOrThrow(TableActions.COLUMN_PILAR)),
+                    aprovada = it.getInt(it.getColumnIndexOrThrow(TableActions.COLUMN_APROVADA)) == 1
+                )
+            }
+        }
+
+        return null
+    }
+
+
+
+
 }
 
 

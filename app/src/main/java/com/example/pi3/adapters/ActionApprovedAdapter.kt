@@ -3,16 +3,21 @@ package com.example.pi3.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
+import com.example.pi3.coordenador.HomeCoordenadorFragment
+import com.example.pi3.coordenador.OnActionClickListener
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
 
 class ActionApprovedAdapter(
     private val actions: List<Action>,
-    private val repository: ActionRepository
+    private val repository: ActionRepository,
+    private val listener: OnActionClickListener
 ) : RecyclerView.Adapter<ActionApprovedAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -20,6 +25,23 @@ class ActionApprovedAdapter(
         val responsavel: TextView = view.findViewById(R.id.txtResponsavel)
         val dataFim: TextView = view.findViewById(R.id.txtDataFim)
         val progresso: ProgressBar = view.findViewById(R.id.progressBar)
+        private val btnEditar: ImageButton = itemView.findViewById(R.id.btnEditar)
+
+        fun bind(action: Action) {
+            titulo.text = action.titulo
+            responsavel.text = action.responsavel
+            dataFim.text = action.dataFim
+
+            val atividades = repository.getActivitiesByActionId(action.id)
+            val total = atividades.size
+            val concluidas = atividades.count { it.status }
+            val progressoPercentual = if (total > 0) (concluidas * 100 / total) else 0
+            progresso.progress = progressoPercentual
+
+            btnEditar.setOnClickListener {
+                listener.onEditarAcaoClicked(action.id)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,17 +51,7 @@ class ActionApprovedAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val action = actions[position]
-        holder.titulo.text = action.titulo
-        holder.responsavel.text = action.responsavel
-        holder.dataFim.text = action.dataFim
-
-        val atividades = repository.getActivitiesByActionId(action.id)
-        val total = atividades.size
-        val concluídas = atividades.count { it.status }
-        val progresso = if (total > 0) (concluídas * 100 / total) else 0
-
-        holder.progresso.progress = progresso
+        holder.bind(actions[position])
     }
 
     override fun getItemCount(): Int = actions.size
