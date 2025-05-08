@@ -3,7 +3,6 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@drawable/login_background"
     android:padding="16dp">
 
@@ -17,11 +16,10 @@
             android:id="@+id/textViewGreeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registre uma ação"
+            android:text="Registre uma atividade"
             android:textColor="@android:color/white"
-            android:textSize="30sp"
+            android:textSize="28sp"
             android:layout_marginTop="32dp" />
-
 
         <!-- Campo com estilo de Card -->
         <androidx.cardview.widget.CardView
@@ -36,7 +34,7 @@
                 android:id="@+id/edtTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome da ação"
+                android:hint="Nome da atividade"
                 android:padding="16dp"
                 android:background="@android:color/transparent"
                 android:inputType="text" />
@@ -156,6 +154,6 @@
             android:backgroundTint="#FFFFFF"
             android:textColor="#000000"
             android:padding="12dp"
-             />
+            />
     </LinearLayout>
 </ScrollView>

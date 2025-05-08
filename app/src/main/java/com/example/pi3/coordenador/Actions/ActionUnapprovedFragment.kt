@@ -1,4 +1,4 @@
-package com.example.pi3.coordenador
+package com.example.pi3.coordenador.Actions
 
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +22,7 @@ class ActionUnapprovedFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ActionUnapprovedAdapter
     private lateinit var repository: ActionRepository
-    private lateinit var spinner: Spinner
+
 
     // Lista mutável para manter referência e poder atualizar
     private val acoes = mutableListOf<Action>()
@@ -38,7 +38,7 @@ class ActionUnapprovedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recyclerViewUnaApproved)
-        spinner = view.findViewById(R.id.spinnerPilar)
+
 
         repository = ActionRepository(requireContext())
 
@@ -64,19 +64,24 @@ class ActionUnapprovedFragment : Fragment() {
         )
         recyclerView.adapter = adapter
 
-        // Configura o spinner usando a função reutilizável
-        setupPilarSpinner(requireContext(), spinner) { pilarSelecionado ->
-            // Atualiza a lista com as ações não aprovadas do pilar escolhido
-            val novasAcoes = repository.getUnapprovedActionsByPillar(pilarSelecionado)
-            Log.d("ActionUnapprovedFragment", "Ações recuperadas: ${novasAcoes.size} ações")
-            // Verifique se novasAcoes não está vazia
-            if (novasAcoes.isEmpty()) {
-                Toast.makeText(requireContext(), "Nenhuma ação encontrada", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                adapter.updateData(novasAcoes)  // Atualiza a lista usando o método do adapter
-            }
-        }
+
+
+   loadActions()
+
+
     }
+
+
+    private fun loadActions() {
+        val acoesNaoAprovadas = repository.getUnapprovedActions()
+        acoes.clear()
+        acoes.addAll(acoesNaoAprovadas)
+        adapter.notifyDataSetChanged()
+
+    }
+
+
+
+
 
 }

@@ -1,0 +1,68 @@
+package com.example.pi3.adapters
+
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.example.pi3.R
+import com.example.pi3.data.ActivitieRepository
+import com.example.pi3.model.Activitie
+
+
+class ActivitieApprovedAdapter (
+    private val activities: List<Activitie>,
+    private val repository: ActivitieRepository
+    ): RecyclerView.Adapter<ActivitieApprovedAdapter.ViewHolder>() {
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val titulo: TextView = view.findViewById(R.id.txtTitulo)
+        private val box: CheckBox = view.findViewById(R.id.checkboxCompleted)
+
+        fun bind(activitie: Activitie, position: Int) {
+            titulo.text = activitie.titulo
+            box.isChecked = activitie.status // Vincula ao campo status
+
+            box.setOnCheckedChangeListener { _, isChecked ->
+                val currentActivitie = activities[position] // Usa a posição passada
+                currentActivitie.status = isChecked // Atualiza o campo local
+
+                if (isChecked) {
+                    if (repository.atualizarStatusAtividade(currentActivitie.id, true)) {
+                        Toast.makeText(
+                            itemView.context,
+                            "${currentActivitie.titulo} marcada como concluída",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    if (repository.atualizarStatusAtividade(currentActivitie.id, false)) {
+                        Toast.makeText(
+                            itemView.context,
+                            "${currentActivitie.titulo} marcada como não concluída",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_activitie_approved, parent, false)
+        return ViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(activities[position], position)
+    }
+
+    override fun getItemCount(): Int = activities.size
+
+}

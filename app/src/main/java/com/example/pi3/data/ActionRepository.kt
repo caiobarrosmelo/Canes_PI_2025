@@ -15,7 +15,7 @@ class ActionRepository(context: Context) {
         val lista = mutableListOf<Action>()
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM ${TableActions.TABLE_NAME} WHERE ${TableActions.COLUMN_PILAR} = ? AND ${TableActions.COLUMN_APROVADA} = 0",
+            "SELECT * FROM ${TableActions.TABLE_NAME} WHERE ${TableActions.COLUMN_APROVADA} = 0",
             arrayOf(pilar)
         )
         if (cursor.moveToFirst()) {
@@ -38,6 +38,37 @@ class ActionRepository(context: Context) {
         db.close()
         return lista
     }
+
+
+    fun getUnapprovedActions(): List<Action> {
+        val lista = mutableListOf<Action>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${TableActions.TABLE_NAME} WHERE ${TableActions.COLUMN_APROVADA} = 0",
+            null
+        )
+        if (cursor.moveToFirst()) {
+            do {
+                val action = Action(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ID)),
+                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_TITULO)),
+                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DESCRICAO)),
+                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_RESPONSAVEL)),
+                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ORCAMENTO)),
+                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_INICIO)),
+                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_FIM)),
+                    pilar = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_PILAR)),
+                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActions.COLUMN_APROVADA)) == 1
+                )
+                lista.add(action)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+
 
     fun getApprovedActionsByPillar(pilar: String): List<Action> {
         val lista = mutableListOf<Action>()
@@ -119,7 +150,7 @@ class ActionRepository(context: Context) {
                     dataFim = cursor.getString(cursor.getColumnIndexOrThrow("data_fim")),
                     status = cursor.getInt(cursor.getColumnIndexOrThrow("status")) == 1,
                     aprovada = cursor.getInt(cursor.getColumnIndexOrThrow("aprovada")) == 1,
-                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow("acaoId"))
+                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow("acao_id"))
                 )
                 atividades.add(atividade)
             } while (cursor.moveToNext())

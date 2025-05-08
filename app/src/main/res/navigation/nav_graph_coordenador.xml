@@ -16,17 +16,54 @@
         <action
             android:id="@+id/action_homeCoordenador_to_editAction"
             app:destination="@id/navigation_editAction" />
+        <action
+            android:id="@+id/action_homeCoordenador_to_ActivitiesApproved"
+            app:destination="@id/navigation_activitiesApproved" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_acoes"
-        android:name="com.example.pi3.coordenador.ActionUnapprovedFragment"
+        android:name="com.example.pi3.coordenador.Actions.ActionUnapprovedFragment"
         android:label="@string/acoes"
         tools:layout="@layout/fragment_unapproved_coordenador" />
 
     <fragment
+        android:id="@+id/navigation_activitiesApproved"
+        android:name="com.example.pi3.coordenador.activities.ActivitiesApproved"
+        android:label="@string/acoes"
+        tools:layout="@layout/fragment_activities_approved">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L"
+            />
+        <argument
+            android:name="pilarSelecionado"
+            app:argType="string" />
+        <action
+        android:id="@+id/action_activitiesApproved_to_editAction"
+        app:destination="@id/navigation_editAction"
+        />
+        <action
+            android:id="@+id/action_activitiesApproved_to_activitieRegister"
+            app:destination="@id/navigation_activitieRegister"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_activitieRegister"
+        android:name="com.example.pi3.coordenador.activities.ActivitieRegister"
+        tools:layout="@layout/fragment_activitie_register">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L"
+            />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_editAction"
-        android:name="com.example.pi3.coordenador.EditAction"
+        android:name="com.example.pi3.coordenador.Actions.EditAction"
         tools:layout="@layout/fragment_edit_action">
         <argument
             android:name="acaoId"
@@ -41,13 +78,13 @@
 
     <fragment
         android:id="@+id/navigation_atividades"
-        android:name="com.example.pi3.coordenador.ActivitiesUnapprovedFragment"
+        android:name="com.example.pi3.coordenador.activities.ActivitiesUnapprovedFragment"
         android:label="@string/atividades"
         tools:layout="@layout/fragment_activities_unapproved" />
 
     <fragment
         android:id="@+id/navigation_actionRegister"
-        android:name="com.example.pi3.coordenador.ActionRegisterFragment"
+        android:name="com.example.pi3.coordenador.Actions.ActionRegisterFragment"
         android:label="@string/atividades"
         tools:layout="@layout/fragment_action_register">
         <argument

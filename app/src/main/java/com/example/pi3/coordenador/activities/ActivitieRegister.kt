@@ -1,43 +1,46 @@
-package com.example.pi3.coordenador
+package com.example.pi3.coordenador.activities
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.pi3.R
-
-
-
-import android.app.DatePickerDialog
-
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.pi3.R
+import com.example.pi3.coordenador.Actions.EditActionArgs
 import com.example.pi3.data.ActionRepository
+import com.example.pi3.data.ActivitieRepository
 import com.example.pi3.model.Action
-
+import com.example.pi3.model.Activitie
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
-class ActionRegisterFragment : Fragment() {
+
+class ActivitieRegister : Fragment() {
 
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText
-    private lateinit var edtResponsavel: EditText  // Responsável
+    private lateinit var edtResponsavel: EditText
     private lateinit var edtOrcamento: EditText
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText
     private lateinit var btnEnviar: Button
 
+    private var acaoId: Long = -1
+
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    private var pilarSelecionado: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_action_register, container, false)
+        return inflater.inflate(R.layout.fragment_activitie_register, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,8 +55,8 @@ class ActionRegisterFragment : Fragment() {
         edtEndDate = view.findViewById(R.id.edtEndDate)
         btnEnviar = view.findViewById(R.id.btnEnviar)
 
-        // Recuperar o pilar selecionado do Safe Args
-        pilarSelecionado = arguments?.getString("pilarSelecionado")
+        val args = ActivitieRegisterArgs.fromBundle(requireArguments())
+        acaoId = args.acaoId
 
         // Abertura do DatePicker ao tocar nos campos
         edtStartDate.setOnClickListener { showDatePickerDialog(edtStartDate) }
@@ -63,33 +66,33 @@ class ActionRegisterFragment : Fragment() {
         btnEnviar.setOnClickListener {
             val titulo = edtTitulo.text.toString()
             val descricao = edtDescricao.text.toString()
-            val responsavel = edtResponsavel.text.toString()  // Responsável
+            val responsavel = edtResponsavel.text.toString()
             val orcamento = edtOrcamento.text.toString().toDoubleOrNull() ?: 0.0
             val dataInicio = edtStartDate.text.toString()
             val dataFim = edtEndDate.text.toString()
 
             // Verifique se todos os campos foram preenchidos corretamente
             if (titulo.isNotEmpty() && descricao.isNotEmpty() && responsavel.isNotEmpty() &&
-                orcamento > 0.0 && dataInicio.isNotEmpty() && dataFim.isNotEmpty() && pilarSelecionado != null) {
+                orcamento > 0.0 && dataInicio.isNotEmpty() && dataFim.isNotEmpty()) {
 
                 // Criar objeto de Ação
-                val action = Action(
+                val activitie = Activitie(
                     titulo = titulo,
                     descricao = descricao,
                     responsavel = responsavel,
                     orcamento = orcamento,
                     dataInicio = dataInicio,
                     dataFim = dataFim,
-                    pilar = pilarSelecionado!!,
-                    aprovada = false  // A ação começa como não aprovada
+                    aprovada = false,  // A ação começa como não aprovada
+                    acaoId = acaoId
                 )
 
                 // Salvar a ação no banco de dados
-                val repository = ActionRepository(requireContext())
-                repository.insertAction(action)
+                val repository = ActivitieRepository(requireContext())
+                repository.insertActivitie(activitie)
 
                 // Exibir mensagem de sucesso
-                Toast.makeText(requireContext(), "Ação registrada!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Atividade registrada!", Toast.LENGTH_SHORT).show()
 
                 // Voltar para a tela anterior
                 findNavController().popBackStack()
