@@ -1,4 +1,4 @@
-package com.example.pi3.coordenador
+package com.example.pi3.coordenador.Actions
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -12,9 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class EditAction : Fragment() {
 

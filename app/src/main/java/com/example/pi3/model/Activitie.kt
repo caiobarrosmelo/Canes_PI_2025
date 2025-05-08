@@ -8,7 +8,7 @@ data class Activitie(
     val orcamento: Double,
     val dataInicio: String,
     val dataFim: String,
-    val status: Boolean = false,
+    var status: Boolean = false,
     val aprovada: Boolean = false,
     val acaoId: Long
 )

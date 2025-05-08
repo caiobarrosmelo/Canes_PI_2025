@@ -21,15 +21,6 @@
         android:layout_marginTop="32dp" />
 
     <!-- Spinner de Pilar -->
-    <Spinner
-        android:id="@+id/spinnerPilar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
-        app:layout_constraintTop_toBottomOf="@id/textViewGreeting"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -42,6 +33,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPilar" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewGreeting" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

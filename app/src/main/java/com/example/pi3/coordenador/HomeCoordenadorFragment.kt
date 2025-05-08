@@ -1,14 +1,11 @@
 package com.example.pi3.coordenador
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,10 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
 import com.example.pi3.adapters.ActionApprovedAdapter
 import com.example.pi3.adapters.setupPilarSpinner
+import com.example.pi3.coordenador.Actions.OnClickToActionDetailsListener
+import com.example.pi3.coordenador.Actions.OnClickToEditActionListener
 import com.example.pi3.data.ActionRepository
 
 
-class HomeCoordenadorFragment : Fragment(), OnActionClickListener {
+class HomeCoordenadorFragment : Fragment(), OnClickToEditActionListener,
+    OnClickToActionDetailsListener {
 
     private lateinit var spinnerPilar: Spinner
     private lateinit var recyclerView: RecyclerView
@@ -61,7 +61,10 @@ class HomeCoordenadorFragment : Fragment(), OnActionClickListener {
 
     private fun carregarAcoesAprovadas(pilar: String) {
         val acoes = repository.getApprovedActionsByPillar(pilar)
-        recyclerView.adapter = ActionApprovedAdapter(acoes, repository, this)
+        recyclerView.adapter = ActionApprovedAdapter(
+            acoes, repository, this, this
+
+        )
     }
 
     override fun onEditarAcaoClicked(acaoId: Long) {
@@ -71,6 +74,11 @@ class HomeCoordenadorFragment : Fragment(), OnActionClickListener {
         findNavController().navigate(action)
     }
 
+    override fun onDetailsActionClicked(acaoId: Long){
+        val pilarSelecionado = spinnerPilar.selectedItem.toString()
+        val action = HomeCoordenadorFragmentDirections.actionHomeCoordenadorToActivitiesApproved(pilarSelecionado, acaoId)
+        findNavController().navigate(action)
+    }
 
 
 }
