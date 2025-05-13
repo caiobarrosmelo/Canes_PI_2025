@@ -1,26 +1,28 @@
 package com.example.pi3.coordenador.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
 import com.example.pi3.adapters.ActionApprovedCompleteAdapter
 import com.example.pi3.adapters.ActivitieApprovedAdapter
+import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.coordenador.Actions.EditActionArgs
-import com.example.pi3.coordenador.Actions.OnClickToEditActionListener
+import com.example.pi3.listeners.OnClickToEditActionListener
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.ActivitieRepository
+import com.example.pi3.listeners.OnDetailsActivityClicked
 import com.example.pi3.model.Activitie
 
 
-class ActivitiesApproved : Fragment(), OnClickToEditActionListener{
+class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnClickToEditActionListener{
 
     private lateinit var recyclerViewAction: RecyclerView
     private lateinit var recyclerViewActivity: RecyclerView
@@ -61,7 +63,7 @@ class ActivitiesApproved : Fragment(), OnClickToEditActionListener{
 
 
 
-        adapter = ActivitieApprovedAdapter(atividades, repositoryActivity)
+        adapter = ActivitieApprovedAdapter(atividades, repositoryActivity, null, this)
         recyclerViewActivity.adapter = adapter
 
 
@@ -80,30 +82,44 @@ class ActivitiesApproved : Fragment(), OnClickToEditActionListener{
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        carregarAtividades(acaoId)
+    }
+
+
     private fun carregarAcao(acaoId: Long) {
         val acao = repositoryAction.getActionById(acaoId)
         if (acao != null) {
-            recyclerViewAction.adapter = ActionApprovedCompleteAdapter(acao, repositoryAction, this)
-        }
-        else{
+            // Cria o adaptador de ação
+            val actionAdapter = ActionApprovedCompleteAdapter(acao, repositoryAction, this)
+            recyclerViewAction.adapter = actionAdapter
+            // Atualiza o adaptador de atividades com o actionAdapter como listener
+            adapter = ActivitieApprovedAdapter(atividades, repositoryActivity, actionAdapter, this)
+            recyclerViewActivity.adapter = adapter
+            // Recarrega as atividades para garantir que o adaptador atualizado seja usado
+            carregarAtividades(acaoId)
+        } else {
             Toast.makeText(requireContext(), "Ação não encontrada", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun carregarAtividades(acaoId: Long) {
         val atividadesAprovadas = repositoryActivity.getActivitiesApprovedByActionId(acaoId)
+        Log.d("ActivitiesApproved", "Carregando atividades: ${atividadesAprovadas.size} encontradas para acaoId=$acaoId")
+        atividadesAprovadas.forEach { atividade ->
+            Log.d("ActivitiesApproved", "Atividade ID=${atividade.id}, Título=${atividade.titulo}")
+        }
         if (atividadesAprovadas.isNotEmpty()) {
             atividades.clear()
             atividades.addAll(atividadesAprovadas)
             adapter.notifyDataSetChanged()
         } else {
+            atividades.clear()
+            adapter.notifyDataSetChanged()
             Toast.makeText(requireContext(), "Nenhuma atividade aprovada encontrada", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 
 
     override fun onEditarAcaoClicked(acaoId: Long) {
@@ -113,7 +129,11 @@ class ActivitiesApproved : Fragment(), OnClickToEditActionListener{
 
        }
 
+    override fun onActivityViewClicked(activityId: Long) {
 
+        val action = ActivitiesApprovedDirections.actionActivitiesApprovedToActivityView(activityId)
+        findNavController().navigate(action)
+    }
 
 
 }

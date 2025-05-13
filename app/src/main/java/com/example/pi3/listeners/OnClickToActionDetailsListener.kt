@@ -1,4 +1,4 @@
-package com.example.pi3.coordenador.Actions
+package com.example.pi3.listeners
 
 interface OnClickToActionDetailsListener {
     fun onDetailsActionClicked(acaoId: Long)
