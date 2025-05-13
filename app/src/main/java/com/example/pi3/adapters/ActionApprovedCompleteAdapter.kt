@@ -11,8 +11,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
-import com.example.pi3.coordenador.Actions.OnClickToEditActionListener
+import com.example.pi3.listeners.OnClickToEditActionListener
 import com.example.pi3.data.ActionRepository
+import com.example.pi3.listeners.OnActivityStatusChangedListener
 import com.example.pi3.model.Action
 
 
@@ -21,11 +22,13 @@ class ActionApprovedCompleteAdapter(
      private val repository: ActionRepository,
      private val listener: OnClickToEditActionListener
 
-) : RecyclerView.Adapter<ActionApprovedCompleteAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ActionApprovedCompleteAdapter.ViewHolder>(),
+    OnActivityStatusChangedListener {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titulo: TextView = view.findViewById(R.id.txtTitulo)
         val responsavel: TextView = view.findViewById(R.id.txtResponsavel)
+        val descricao: TextView = view.findViewById(R.id.txtDescricao)
         val orcamento: TextView = view.findViewById(R.id.txtValueOrcamento)
         val dataInicio: TextView = view.findViewById(R.id.txtDataInicio)
         val dataFim: TextView = view.findViewById(R.id.txtDataFim)
@@ -34,21 +37,28 @@ class ActionApprovedCompleteAdapter(
 
         fun bind(action: Action) {
             titulo.text = action.titulo
+            descricao.text = action.descricao
             responsavel.text = action.responsavel
             orcamento.text = action.orcamento.toString()
             dataInicio.text = action.dataInicio
             dataFim.text = action.dataFim
+            updateProgress()
+            btnEditar.setOnClickListener {
+                listener.onEditarAcaoClicked(action.id)
+            }
+        }
 
+
+        fun updateProgress() {
             val atividades = repository.getActivitiesByActionId(action.id)
             val total = atividades.size
             val concluidas = atividades.count { it.status }
             val progressoPercentual = if (total > 0) (concluidas * 100 / total) else 0
             progresso.progress = progressoPercentual
-
-            btnEditar.setOnClickListener {
-                listener.onEditarAcaoClicked(action.id)
-            }
         }
+
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -65,6 +75,10 @@ class ActionApprovedCompleteAdapter(
         holder.bind(action)
     }
 
+
+    override fun onActivityStatusChanged() {
+        notifyDataSetChanged() // Re-renderiza o item para atualizar o progresso
+    }
 
 
 }

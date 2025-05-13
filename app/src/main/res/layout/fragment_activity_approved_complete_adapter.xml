@@ -23,7 +23,7 @@
                 android:id="@+id/btnEditar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_edit"
+                android:src="@drawable/delete_icon"
                 android:background="@drawable/btn_gray_square"
                 android:contentDescription="Editar ação"
                 android:layout_gravity="end"
@@ -41,6 +41,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+
         <TextView
             android:id="@+id/txtDescricao"
             android:layout_width="match_parent"
@@ -51,23 +52,22 @@
             android:textStyle="bold" />
 
 
-
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/txtResponsavel"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:text="Fulano" />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txtResponsavel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="Fulano" />
 
 
-    </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,55 +95,31 @@
 
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/txtDataInicio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:text="23/05/2025" />
-
-
-        <TextView
-            android:id="@+id/txtDataFim"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:text="06/06/2025" />
-
-
-    </LinearLayout>
-
-
-
-        <TextView
-            android:id="@+id/txtProgressoLabel"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Progresso"
-            android:textColor="#000000"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txtDataInicio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="23/05/2025" />
 
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="6dp"
-            android:max="100"
-            android:progress="0"
-            android:progressTint="@color/white" />
+            <TextView
+                android:id="@+id/txtDataFim"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="06/06/2025" />
 
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

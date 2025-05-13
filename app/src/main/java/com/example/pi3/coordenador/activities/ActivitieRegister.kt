@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
+import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.coordenador.Actions.EditActionArgs
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.ActivitieRepository
@@ -21,7 +22,7 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class ActivitieRegister : Fragment() {
+class ActivitieRegister : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText

@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
 import com.example.pi3.adapters.ActionApprovedAdapter
 import com.example.pi3.adapters.setupPilarSpinner
-import com.example.pi3.coordenador.Actions.OnClickToActionDetailsListener
-import com.example.pi3.coordenador.Actions.OnClickToEditActionListener
+import com.example.pi3.listeners.OnClickToActionDetailsListener
 import com.example.pi3.data.ActionRepository
 
 
-class HomeCoordenadorFragment : Fragment(), OnClickToEditActionListener,
+class HomeCoordenadorFragment : Fragment(),
     OnClickToActionDetailsListener {
 
     private lateinit var spinnerPilar: Spinner
@@ -62,17 +61,11 @@ class HomeCoordenadorFragment : Fragment(), OnClickToEditActionListener,
     private fun carregarAcoesAprovadas(pilar: String) {
         val acoes = repository.getApprovedActionsByPillar(pilar)
         recyclerView.adapter = ActionApprovedAdapter(
-            acoes, repository, this, this
+            acoes, repository, this,
 
         )
     }
 
-    override fun onEditarAcaoClicked(acaoId: Long) {
-        val pilarSelecionado = spinnerPilar.selectedItem.toString()
-        val action = HomeCoordenadorFragmentDirections
-            .actionHomeCoordenadorToEditAction(pilarSelecionado, acaoId)
-        findNavController().navigate(action)
-    }
 
     override fun onDetailsActionClicked(acaoId: Long){
         val pilarSelecionado = spinnerPilar.selectedItem.toString()

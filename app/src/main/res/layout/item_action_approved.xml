@@ -15,23 +15,6 @@
         android:orientation="vertical">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end">
-            <ImageButton
-                android:id="@+id/btnEditar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/icon_edit"
-            android:background="@drawable/btn_gray_square"
-            android:contentDescription="Editar ação"
-            android:layout_gravity="end"
-            android:scaleType="centerInside"
-            />
-        </LinearLayout>
-
-
         <TextView
             android:id="@+id/txtTitulo"
             android:layout_width="match_parent"

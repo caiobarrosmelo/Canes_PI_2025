@@ -10,13 +10,17 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
 import com.example.pi3.data.ActivitieRepository
+import com.example.pi3.listeners.OnActivityStatusChangedListener
+import com.example.pi3.listeners.OnDetailsActivityClicked
 import com.example.pi3.model.Activitie
 
 
 class ActivitieApprovedAdapter (
     private val activities: List<Activitie>,
-    private val repository: ActivitieRepository
-    ): RecyclerView.Adapter<ActivitieApprovedAdapter.ViewHolder>() {
+    private val repository: ActivitieRepository,
+    private val statusChangedListener: OnActivityStatusChangedListener? = null,
+    private val listener: OnDetailsActivityClicked? = null
+): RecyclerView.Adapter<ActivitieApprovedAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titulo: TextView = view.findViewById(R.id.txtTitulo)
@@ -37,6 +41,7 @@ class ActivitieApprovedAdapter (
                             "${currentActivitie.titulo} marcada como concluída",
                             Toast.LENGTH_SHORT
                         ).show()
+                        statusChangedListener?.onActivityStatusChanged()
                     }
                 } else {
                     if (repository.atualizarStatusAtividade(currentActivitie.id, false)) {
@@ -45,9 +50,18 @@ class ActivitieApprovedAdapter (
                             "${currentActivitie.titulo} marcada como não concluída",
                             Toast.LENGTH_SHORT
                         ).show()
+                        statusChangedListener?.onActivityStatusChanged()
                     }
                 }
             }
+
+
+            itemView.setOnClickListener {
+                listener?.onActivityViewClicked(activitie.id)
+            }
+
+
+
         }
 
 
