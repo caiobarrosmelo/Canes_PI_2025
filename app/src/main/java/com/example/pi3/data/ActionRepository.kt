@@ -10,6 +10,64 @@ class ActionRepository(context: Context) {
 
     private val dbHelper = DBHelper(context)
 
+    // Método para obter todas as ações
+    fun getAllActions(): List<Action> {
+        val lista = mutableListOf<Action>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${TableActions.TABLE_NAME}",
+            null
+        )
+        if (cursor.moveToFirst()) {
+            do {
+                val action = Action(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ID)),
+                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_TITULO)),
+                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DESCRICAO)),
+                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_RESPONSAVEL)),
+                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ORCAMENTO)),
+                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_INICIO)),
+                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_FIM)),
+                    pilar = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_PILAR)),
+                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActions.COLUMN_APROVADA)) == 1
+                )
+                lista.add(action)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+    // Método para obter ações por pilar
+    fun getActionsByPilar(pilar: String): List<Action> {
+        val lista = mutableListOf<Action>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${TableActions.TABLE_NAME} WHERE ${TableActions.COLUMN_PILAR} = ?",
+            arrayOf(pilar)
+        )
+        if (cursor.moveToFirst()) {
+            do {
+                val action = Action(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ID)),
+                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_TITULO)),
+                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DESCRICAO)),
+                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_RESPONSAVEL)),
+                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActions.COLUMN_ORCAMENTO)),
+                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_INICIO)),
+                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_DATA_FIM)),
+                    pilar = cursor.getString(cursor.getColumnIndexOrThrow(TableActions.COLUMN_PILAR)),
+                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActions.COLUMN_APROVADA)) == 1
+                )
+                lista.add(action)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return lista
+    }
+
     // Método para obter ações não aprovadas por pilar
     fun getUnapprovedActionsByPillar(pilar: String): List<Action> {
         val lista = mutableListOf<Action>()
