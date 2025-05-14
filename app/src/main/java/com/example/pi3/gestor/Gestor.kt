@@ -32,7 +32,11 @@ class Gestor : AppCompatActivity() {
         actionRepository = ActionRepository(this)
 
         // Configuração do Spinner de Pilares
-        val pilares = arrayOf("Todos", "Pilar 1", "Pilar 2", "Pilar 3", "Pilar 4")
+        val pilares = arrayOf("Todos", "1. Suporte da alta administração", "2. Instância responsável",
+            "3. Análise de riscos", "4.1. Código de ética e conduta e políticas de compliance",
+            "4.2. Comunicação e treinamento", "4.3. Ouvidoria", "4.4. Investigações internas",
+            "4.5. Processos de investigação", "4.6. Due diligence", "5. Diversidade e inclusão",
+            "6. Auditoria e monitoramento")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, pilares)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerPilar.adapter = adapter

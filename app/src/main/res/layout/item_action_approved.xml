@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:elevation="4dp"
     android:background="@drawable/bg_card_branco"
-    android:padding="36dp">
+    android:padding="36dp"
+    app:cardCornerRadius="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
