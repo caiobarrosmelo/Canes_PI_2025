@@ -35,8 +35,8 @@
             android:id="@+id/action_activitiesApproved_to_editAction"
             app:destination="@id/navigation_editAction" />
         <action
-            android:id="@+id/action_activitiesApproved_to_activitiesRegister"
-            app:destination="@id/navigation_activitiesRegister" />
+            android:id="@+id/action_activitiesApproved_to_activitieRegister"
+            app:destination="@id/navigation_activitieRegister" />
         <action
             android:id="@+id/action_activitiesApproved_to_activityView"
             app:destination="@id/navigation_activityView" />
@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/navigation_activityView"
-        android:name="com.example.pi3.apoio.activities.ActivityViewApoio"
+        android:name="com.example.pi3.apoio.activities.ActivityView"
         tools:layout="@layout/fragment_activity_view">
         <argument
             android:name="activityId"
@@ -54,8 +54,8 @@
 
 
     <fragment
-        android:id="@+id/navigation_activitiesRegister"
-        android:name="com.example.pi3.apoio.activities.ActivitiesRegister"
+        android:id="@+id/navigation_activitieRegister"
+        android:name="com.example.pi3.apoio.activities.ActivitieRegister"
         tools:layout="@layout/fragment_activitie_register">
         <argument
             android:name="acaoId"

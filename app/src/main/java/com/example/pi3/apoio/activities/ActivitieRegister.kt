@@ -18,7 +18,7 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class ActivitiesRegister : function_arrow_back() {
+class ActivitieRegister : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText
@@ -52,7 +52,7 @@ class ActivitiesRegister : function_arrow_back() {
         edtEndDate = view.findViewById(R.id.edtEndDate)
         btnEnviar = view.findViewById(R.id.btnEnviar)
 
-        val args = ActivitiesRegisterArgs.fromBundle(requireArguments())
+        val args = ActivitieRegisterArgs.fromBundle(requireArguments())
         acaoId = args.acaoId
 
         // Abertura do DatePicker ao tocar nos campos

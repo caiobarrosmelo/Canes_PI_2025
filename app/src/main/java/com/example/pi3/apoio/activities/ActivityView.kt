@@ -12,7 +12,7 @@ import com.example.pi3.adapters.ActivityApprovedCompleteAdapter
 import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.data.ActivitieRepository
 
-class ActivityViewApoio : function_arrow_back() {
+class ActivityView : function_arrow_back() {
     private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var repositoryActivity: ActivitieRepository
     private var activityId: Long = -1
@@ -30,7 +30,7 @@ class ActivityViewApoio : function_arrow_back() {
         recyclerViewActivity = view.findViewById(R.id.recyclerViewActivity)
         repositoryActivity = ActivitieRepository(requireContext())
 
-        val args = ActivityViewApoioArgs.fromBundle(requireArguments())
+        val args = ActivityViewArgs.fromBundle(requireArguments())
         activityId = args.activityId
 
         recyclerViewActivity.layoutManager = LinearLayoutManager(requireContext())
