@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_apoio"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.pi3.apoio.HomeApoioFragment"
+        tools:layout="@layout/fragment_home_apoio">
+        <action
+            android:id="@+id/action_homeApoio_to_registrar"
+            app:destination="@id/navigation_actionRegister" />
+        <action
+            android:id="@+id/action_homeApoio_to_editAction"
+            app:destination="@id/navigation_editAction" />
+        <action
+            android:id="@+id/action_homeApoio_to_ActivitiesApproved"
+            app:destination="@id/navigation_activitiesApproved" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_activitiesApproved"
+        android:name="com.example.pi3.apoio.activities.ActivitiesApproved"
+        tools:layout="@layout/fragment_activities_approved">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="pilarSelecionado"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_activitiesApproved_to_editAction"
+            app:destination="@id/navigation_editAction" />
+        <action
+            android:id="@+id/action_activitiesApproved_to_activitieRegister"
+            app:destination="@id/navigation_activitieRegister" />
+        <action
+            android:id="@+id/action_activitiesApproved_to_activityView"
+            app:destination="@id/navigation_activityView" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_activityView"
+        android:name="com.example.pi3.apoio.activities.ActivityView"
+        tools:layout="@layout/fragment_activity_view">
+        <argument
+            android:name="activityId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_activitieRegister"
+        android:name="com.example.pi3.apoio.activities.ActivitieRegister"
+        tools:layout="@layout/fragment_activitie_register">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_activitiesRegister_to_activitiesApproved"
+            app:destination="@id/navigation_activitiesApproved"
+            app:popUpTo="@id/navigation_activitiesApproved"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_editAction"
+        android:name="com.example.pi3.apoio.actions.EditAction"
+        tools:layout="@layout/fragment_edit_action">
+        <argument
+            android:name="acaoId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="pilarSelecionado"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editAction_to_activitiesApproved"
+            app:destination="@id/navigation_activitiesApproved"
+            app:popUpTo="@id/navigation_activitiesApproved"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_editAction_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_actionRegister"
+        android:name="com.example.pi3.apoio.actions.ActionRegisterFragment"
+        tools:layout="@layout/fragment_action_register">
+        <argument
+            android:name="pilarSelecionado"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_actionRegister_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
