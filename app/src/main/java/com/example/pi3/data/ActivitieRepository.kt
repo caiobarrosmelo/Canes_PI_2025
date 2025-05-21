@@ -141,55 +141,6 @@ class ActivitieRepository(context: Context) {
         return rowsUpdated > 0
     }
 
-    fun getActivityById(id: Long): Activitie? {
-        val db = dbHelper.readableDatabase
-        val cursor = db.query(
-            TableActivities.TABLE_NAME,
-            null,
-            "${TableActivities.COLUMN_ID} = ?",
-            arrayOf(id.toString()),
-            null,
-            null,
-            null
-        )
-        return try {
-            if (cursor.moveToFirst()) {
-                Activitie(
-                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)) == 1,
-                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
-                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-                )
-            } else {
-                null
-            }
-        } finally {
-            cursor.close()
-        }
-    }
 
-    fun deleteActivityById(id: Long): Boolean {
-        val db = dbHelper.writableDatabase
-        val rowsAffected = db.delete(
-            TableActivities.TABLE_NAME,
-            "${TableActivities.COLUMN_ID} = ?",
-            arrayOf(id.toString())
-        )
-        db.close()
-        return rowsAffected > 0
-    }
+
 }
-
-
-
-
-
-
-
-

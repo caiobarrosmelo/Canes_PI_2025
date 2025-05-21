@@ -55,7 +55,7 @@ class ActivitiesUnapprovedFragment : Fragment() {
             },
             onRecusarClick = { activitie ->
                 if (repository.desaprovarAtividade(activitie.id)) {
-                    Toast.makeText(requireContext(), "Atividade recusada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Ação recusada", Toast.LENGTH_SHORT).show()
                     atividades.remove(activitie)
                     adapter.notifyDataSetChanged()
                 }

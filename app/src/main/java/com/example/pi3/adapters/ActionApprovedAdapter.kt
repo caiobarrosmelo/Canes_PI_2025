@@ -3,17 +3,20 @@ package com.example.pi3.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
-import com.example.pi3.listeners.OnClickToActionDetailsListener
+import com.example.pi3.coordenador.Actions.OnClickToActionDetailsListener
+import com.example.pi3.coordenador.Actions.OnClickToEditActionListener
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
 
 class ActionApprovedAdapter(
     private val actions: List<Action>,
     private val repository: ActionRepository,
+    private val listenerEdit: OnClickToEditActionListener,
     private val listenerActivitieDetails: OnClickToActionDetailsListener,
 ) : RecyclerView.Adapter<ActionApprovedAdapter.ViewHolder>() {
 
@@ -22,7 +25,7 @@ class ActionApprovedAdapter(
         val responsavel: TextView = view.findViewById(R.id.txtResponsavel)
         val dataFim: TextView = view.findViewById(R.id.txtDataFim)
         val progresso: ProgressBar = view.findViewById(R.id.progressBar)
-
+        private val btnEditar: ImageButton = itemView.findViewById(R.id.btnEditar)
 
 
         fun bind(action: Action) {
@@ -40,6 +43,9 @@ class ActionApprovedAdapter(
                 listenerActivitieDetails.onDetailsActionClicked(action.id)
             }
 
+            btnEditar.setOnClickListener {
+                listenerEdit.onEditarAcaoClicked(action.id)
+            }
 
 
         }

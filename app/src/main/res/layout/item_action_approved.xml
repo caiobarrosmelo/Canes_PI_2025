@@ -6,14 +6,30 @@
     android:layout_height="wrap_content"
     android:elevation="4dp"
     android:background="@drawable/bg_card_branco"
-    android:padding="36dp"
-    app:cardCornerRadius="20dp">
+    android:padding="36dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+            <ImageButton
+                android:id="@+id/btnEditar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_edit"
+            android:background="@drawable/btn_gray_square"
+            android:contentDescription="Editar ação"
+            android:layout_gravity="end"
+            android:scaleType="centerInside"
+            />
+        </LinearLayout>
 
 
         <TextView
@@ -23,8 +39,7 @@
             android:gravity="center"
             android:text="Título da ação"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/azul"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,8 +54,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:text="Fulano"
-                android:textColor="@color/azul"/>
+                android:text="Fulano" />
 
 
             <TextView
@@ -49,8 +63,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:text="2025-12-01"
-                android:textColor="@color/azul"/>
+                android:text="2025-12-01" />
 
         </LinearLayout>
 
@@ -61,22 +74,19 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="Progresso"
-            android:textColor="@color/azul"
+            android:textColor="#000000"
             android:textStyle="bold" />
 
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="200dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
-            android:progress="0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="6dp"
             android:max="100"
-            android:progressDrawable="@drawable/progress_bar_custom"
-            android:layout_gravity="center" />
-
-
+            android:progress="0"
+            android:progressTint="@color/white" />
 
     </LinearLayout>
 

@@ -11,7 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.pi3.apoio.ApoioActivity
+import com.example.pi3.apoio.Analista
 import com.example.pi3.coordenador.CoordenadorActivity
 import com.example.pi3.gestor.Gestor
 
@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
             val senha = tSenha.text.toString()
 
             // Verificação simples de login e senha
-            if (login == "apoio" && senha == "123") {
-                // Navega para a tela do Apoio
-                val intent = Intent(this@MainActivity, ApoioActivity::class.java)
+            if (login == "analista" && senha == "123") {
+                // Navega para a tela do Analista
+                val intent = Intent(this@MainActivity, Analista::class.java)
                 startActivity(intent)
             } else if (login == "coordenador" && senha == "123") {
                 // Navega para a tela do Coordenador

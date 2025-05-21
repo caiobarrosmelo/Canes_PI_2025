@@ -13,14 +13,13 @@ import android.app.DatePickerDialog
 
 import android.widget.*
 import androidx.navigation.fragment.findNavController
-import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
 
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ActionRegisterFragment : function_arrow_back() {
+class ActionRegisterFragment : Fragment() {
 
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText

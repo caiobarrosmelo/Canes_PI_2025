@@ -3,7 +3,6 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/login_background"
     android:padding="16dp">
 
@@ -12,26 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-
-            <include
-                android:id="@+id/include_arrow_back"
-                layout="@layout/fragment_function_arrow_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp" />
-
-
-        </LinearLayout>
-
 
 
         <!-- Campo com estilo de Card -->
@@ -40,7 +19,7 @@
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="130dp"
             >
 
             <EditText
@@ -120,8 +99,7 @@
                     android:layout_height="wrap_content"
                     android:text="Data"
                     android:textStyle="bold"
-                    android:paddingBottom="8dp"
-                    android:textColor="@color/azul"/>
+                    android:paddingBottom="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,7 +144,7 @@
             android:layout_marginTop="16dp"
             android:text="Enviar"
             android:backgroundTint="#FFFFFF"
-            android:textColor="@color/azul"
+            android:textColor="#000000"
             android:padding="12dp"
             />
     </LinearLayout>

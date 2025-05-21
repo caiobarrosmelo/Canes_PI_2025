@@ -10,12 +10,11 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
-import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
 import java.util.Calendar
 
-class EditAction : function_arrow_back() {
+class EditAction : Fragment() {
 
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText

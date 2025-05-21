@@ -12,11 +12,11 @@ fun setupPilarSpinner(
     onItemSelected: (String) -> Unit
 ) {
     val pilares = arrayOf(
-        "1. Suporte da alta administração", "2. Instância responsável",
-        "3. Análise de riscos", "4.1. Código de ética e conduta e políticas de compliance",
-        "4.2. Comunicação e treinamento", "4.3. Ouvidoria", "4.4. Investigações internas",
-        "4.5. Processos de investigação", "4.6. Due diligence", "5. Diversidade e inclusão",
-        "6. Auditoria e monitoramento"
+        "Suporte da Alta Administração", "Instância Responsável",
+        "Análise de Riscos", "Estruturação das Regras e Instrumentos",
+        "Código de Ética/Compliance", "Ouvidoria", "Investigações Internas",
+        "Processo de Investigação", "Due Diligence", "Diversidade e Inclusão",
+        "Auditoria e Monitoramento"
     )
 
     val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, pilares)
