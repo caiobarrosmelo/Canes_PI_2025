@@ -22,6 +22,7 @@ class ActivityApprovedCompleteAdapter(
         val orcamento: TextView = view.findViewById(R.id.txtValueOrcamento)
         val dataInicio: TextView = view.findViewById(R.id.txtDataInicio)
         val dataFim: TextView = view.findViewById(R.id.txtDataFim)
+        val txtConcluido: TextView = view.findViewById(R.id.txtConcluido)
         private val btnEditar: ImageButton = itemView.findViewById(R.id.btnEditar)
 
         fun bind(activity: Activitie) {
@@ -32,6 +33,13 @@ class ActivityApprovedCompleteAdapter(
             dataInicio.text = activity.dataInicio
             dataFim.text = activity.dataFim
 
+            if (activity.status) {
+
+                txtConcluido.visibility = View.VISIBLE
+            } else {
+
+                txtConcluido.visibility = View.GONE
+            }
             // ✅ Só mostra o botão de editar se o listener estiver presente
             if (listener != null) {
                 btnEditar.visibility = View.VISIBLE
@@ -55,6 +63,6 @@ class ActivityApprovedCompleteAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder
+        holder.bind(activity)
     }
 }
