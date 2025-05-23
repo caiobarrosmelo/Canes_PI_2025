@@ -37,13 +37,12 @@
                 android:id="@+id/btnEditar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/delete"
-                android:tint="@color/vermelho"
+                android:src="@drawable/trash"
                 android:background="@drawable/btn_geral"
                 android:contentDescription="Editar ação"
                 android:layout_gravity="end"
                 android:scaleType="centerInside"
-                />
+                app:tint="@color/vermelho" />
         </LinearLayout>
 
         <TextView

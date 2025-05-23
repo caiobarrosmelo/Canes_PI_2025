@@ -18,9 +18,14 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
+        app:itemBackground="@android:color/transparent"
+        app:itemRippleColor="@color/ripple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        app:itemIconTint="@color/azul"
+        app:itemTextColor="@color/azul"
+        app:itemActiveIndicatorStyle="@style/BottomNavIndicator"
         app:menu="@menu/bottom_nav_menu_coordenador" />
 
 

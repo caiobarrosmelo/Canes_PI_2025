@@ -41,7 +41,7 @@
         android:backgroundTint="@color/white"
         android:text="Registrar nova ação"
         android:textColor="#004A8D"
-        android:drawableLeft="@drawable/baseline_add_circle_outline_24"
+        android:drawableLeft="@drawable/add"
         app:layout_constraintTop_toBottomOf="@id/spinnerPilar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
