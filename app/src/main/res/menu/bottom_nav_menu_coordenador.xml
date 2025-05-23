@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/home_selector"
         android:title="@string/inicial" />
     <item
         android:id="@+id/navigation_acoes"
-        android:icon="@drawable/baseline_ads_click_24"
+        android:icon="@drawable/action_selector"
         android:title="@string/acoes" />
     <item
         android:id="@+id/navigation_atividades"
-        android:icon="@drawable/baseline_checklist_24"
+        android:icon="@drawable/activ_selector"
         android:title="@string/atividades" />
 </menu>

@@ -5,7 +5,8 @@ package com.example.pi3.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.animation.ObjectAnimator
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -54,7 +55,13 @@ class ActionApprovedCompleteAdapter(
             val total = atividades.size
             val concluidas = atividades.count { it.status }
             val progressoPercentual = if (total > 0) (concluidas * 100 / total) else 0
-            progresso.progress = progressoPercentual
+
+            //Animação suave
+            val currentProgress = progresso.progress
+            val animation = ObjectAnimator.ofInt(progresso, "progress", currentProgress, progressoPercentual)
+            animation.duration = 750
+            animation.interpolator = DecelerateInterpolator()
+            animation.start()
         }
 
 
