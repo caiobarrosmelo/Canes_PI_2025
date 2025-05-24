@@ -88,14 +88,12 @@
             card_view:cardCornerRadius="16dp"
             android:layout_marginBottom="16dp">
 
-            <EditText
-                android:id="@+id/edtAtribuicao"
+            <Spinner
+                android:id="@+id/spinnerResponsavel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Atribuído para"
                 android:padding="16dp"
-                android:background="@android:color/transparent"
-                android:inputType="text" />
+                android:background="@android:color/transparent"/>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
