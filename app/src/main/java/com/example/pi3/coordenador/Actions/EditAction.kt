@@ -6,12 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.data.ActionRepository
-import com.example.pi3.data.DBHelper
 import com.example.pi3.model.Action
 import java.util.Calendar
 
@@ -21,7 +21,7 @@ class EditAction : function_arrow_back() {
     private lateinit var edtEndDate: EditText
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText
-    private lateinit var spinnerResponsavel: Spinner
+    private lateinit var edtAtribuicao: EditText
     private lateinit var edtOrcamento: EditText
     private lateinit var btnEnviar: Button
 
@@ -41,7 +41,7 @@ class EditAction : function_arrow_back() {
         // Inicializar os campos
         edtTitulo = view.findViewById(R.id.edtTitulo)
         edtDescricao = view.findViewById(R.id.edtDescricao)
-        spinnerResponsavel = view.findViewById(R.id.spinnerResponsavel)
+        edtAtribuicao = view.findViewById(R.id.edtAtribuicao)
         edtOrcamento = view.findViewById(R.id.edtOrcamento)
         edtStartDate = view.findViewById(R.id.edtStartDate)
         edtEndDate = view.findViewById(R.id.edtEndDate)
@@ -51,9 +51,6 @@ class EditAction : function_arrow_back() {
         val args = EditActionArgs.fromBundle(requireArguments())
         acaoId = args.acaoId
         pilarSelecionado = args.pilarSelecionado
-
-        // Configurar o spinner de responsáveis (lista de papéis)
-        configurarSpinnerResponsavel()
 
         // Carregar os dados da ação
         carregarDadosDaAcao(acaoId)
@@ -73,46 +70,6 @@ class EditAction : function_arrow_back() {
         }
     }
 
-    private fun configurarSpinnerResponsavel() {
-        val dbHelper = DBHelper(requireContext())
-        val db = dbHelper.readableDatabase
-        val papeisUsuarios = mutableListOf("Selecione o responsável")
-
-        val cursor = db.rawQuery(
-            "SELECT DISTINCT papel FROM usuario WHERE papel IN ('apoio', 'coordenador')",
-            null
-        )
-
-        if (cursor.moveToFirst()) {
-            do {
-                papeisUsuarios.add(cursor.getString(0))
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, papeisUsuarios)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerResponsavel.adapter = adapter
-    }
-
-    private fun carregarDadosDaAcao(acaoId: Long) {
-        val acao = ActionRepository(requireContext()).getActionById(acaoId)
-        if (acao != null) {
-            edtTitulo.setText(acao.titulo)
-            edtDescricao.setText(acao.descricao)
-            edtOrcamento.setText(acao.orcamento.toString())
-            edtStartDate.setText(acao.dataInicio)
-            edtEndDate.setText(acao.dataFim)
-
-            // Ajustar seleção do spinner para o responsável atual (papel)
-            val adapter = spinnerResponsavel.adapter as ArrayAdapter<String>
-            val pos = adapter.getPosition(acao.responsavel)
-            if (pos >= 0) {
-                spinnerResponsavel.setSelection(pos)
-            }
-        }
-    }
-
     private fun mostrarDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -129,30 +86,39 @@ class EditAction : function_arrow_back() {
         datePickerDialog.show()
     }
 
+    private fun carregarDadosDaAcao(acaoId: Long) {
+        val acao = ActionRepository(requireContext()).getActionById(acaoId)
+
+        edtTitulo.setText(acao?.titulo)
+        edtDescricao.setText(acao?.descricao)
+        edtAtribuicao.setText(acao?.responsavel)
+        edtOrcamento.setText(acao?.orcamento?.toString() ?: "")
+        edtStartDate.setText(acao?.dataInicio)
+        edtEndDate.setText(acao?.dataFim)
+    }
+
     private fun enviarDados() {
         // Validação básica
         if (pilarSelecionado.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Pilar selecionado inválido", Toast.LENGTH_SHORT).show()
+            // Você poderia mostrar um Toast aqui se quiser
             return
         }
 
         val titulo = edtTitulo.text.toString()
         val descricao = edtDescricao.text.toString()
-        val responsavel = spinnerResponsavel.selectedItem.toString()
+        val atribuicao = edtAtribuicao.text.toString()
         val orcamentoTexto = edtOrcamento.text.toString()
         val startDate = edtStartDate.text.toString()
         val endDate = edtEndDate.text.toString()
 
-        if (titulo.isBlank() || descricao.isBlank() || responsavel == "Selecione o responsável" ||
-            orcamentoTexto.isBlank() || startDate.isBlank() || endDate.isBlank()
-        ) {
-            Toast.makeText(requireContext(), "Preencha todos os campos corretamente", Toast.LENGTH_SHORT).show()
+        if (titulo.isBlank() || descricao.isBlank() || atribuicao.isBlank() || orcamentoTexto.isBlank() || startDate.isBlank() || endDate.isBlank()) {
+            // Campos obrigatórios faltando
             return
         }
 
         val orcamento = orcamentoTexto.toDoubleOrNull()
         if (orcamento == null) {
-            Toast.makeText(requireContext(), "Orçamento inválido", Toast.LENGTH_SHORT).show()
+            // Se o orçamento não for número válido, poderia mostrar erro também
             return
         }
 
@@ -161,7 +127,7 @@ class EditAction : function_arrow_back() {
             id = acaoId,
             titulo = titulo,
             descricao = descricao,
-            responsavel = responsavel,
+            responsavel = atribuicao,
             orcamento = orcamento,
             dataInicio = startDate,
             dataFim = endDate,
@@ -170,8 +136,6 @@ class EditAction : function_arrow_back() {
 
         // Atualizar a ação no banco de dados
         ActionRepository(requireContext()).updateAction(acao)
-
-        Toast.makeText(requireContext(), "Ação atualizada com sucesso!", Toast.LENGTH_SHORT).show()
 
         // Voltar para o fragment anterior
         findNavController().navigateUp()
