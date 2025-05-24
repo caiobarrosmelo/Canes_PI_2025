@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class DBHelper(context: Context) : SQLiteOpenHelper(
-    context, "seuprojeto.db", null, 1
+    context, "seuprojeto.db", null, 2
 ) {
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_ACTIONS_TABLE = """
@@ -23,7 +23,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(
         """
         db.execSQL(CREATE_ACTIONS_TABLE)
 
-        val CREATE_activities_TABLE = """
+        val CREATE_ACTIVITIES_TABLE = """
             CREATE TABLE ${TableActivities.TABLE_NAME} (
                 ${TableActivities.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
                 ${TableActivities.COLUMN_TITULO} TEXT,
@@ -38,12 +38,32 @@ class DBHelper(context: Context) : SQLiteOpenHelper(
                 FOREIGN KEY(${TableActivities.COLUMN_ACAO_ID}) REFERENCES ${TableActions.TABLE_NAME}(${TableActions.COLUMN_ID})
             )
         """
-        db.execSQL(CREATE_activities_TABLE)
+        db.execSQL(CREATE_ACTIVITIES_TABLE)
+
+        // Criação da tabela de usuários
+        val CREATE_USERS_TABLE = """
+            CREATE TABLE ${TableUsers.TABLE_NAME} (
+                ${TableUsers.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${TableUsers.COLUMN_PAPEL} TEXT,
+                ${TableUsers.COLUMN_SENHA} TEXT
+            )
+        """
+        db.execSQL(CREATE_USERS_TABLE)
+
+        // Inserção automática dos 3 papéis com senha padrão '123'
+        val INSERT_DEFAULT_USERS = """
+            INSERT INTO ${TableUsers.TABLE_NAME} (${TableUsers.COLUMN_PAPEL}, ${TableUsers.COLUMN_SENHA}) VALUES
+            ('apoio', '123'),
+            ('coordenador', '123'),
+            ('gestor', '123')
+        """
+        db.execSQL(INSERT_DEFAULT_USERS)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS ${TableActivities.TABLE_NAME}")
         db.execSQL("DROP TABLE IF EXISTS ${TableActions.TABLE_NAME}")
+        db.execSQL("DROP TABLE IF EXISTS ${TableUsers.TABLE_NAME}")
         onCreate(db)
     }
 }

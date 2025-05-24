@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
@@ -15,6 +17,7 @@ import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.coordenador.Actions.EditActionArgs
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.ActivitieRepository
+import com.example.pi3.data.DBHelper
 import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 import java.text.SimpleDateFormat
@@ -26,7 +29,7 @@ class ActivitieRegister : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText
     private lateinit var edtDescricao: EditText
-    private lateinit var edtResponsavel: EditText
+    private lateinit var spinnerResponsavel: Spinner
     private lateinit var edtOrcamento: EditText
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText
@@ -50,11 +53,29 @@ class ActivitieRegister : function_arrow_back() {
         // Inicializar os componentes
         edtTitulo = view.findViewById(R.id.edtTitulo)
         edtDescricao = view.findViewById(R.id.edtDescricao)
-        edtResponsavel = view.findViewById(R.id.edtAtribuicao)  // Responsável
+        spinnerResponsavel = view.findViewById(R.id.spinnerResponsavel)  // Responsável
         edtOrcamento = view.findViewById(R.id.edtOrcamento)
         edtStartDate = view.findViewById(R.id.edtStartDate)
         edtEndDate = view.findViewById(R.id.edtEndDate)
         btnEnviar = view.findViewById(R.id.btnEnviar)
+
+        // Preencher spinner com nomes dos usuários
+        val dbHelper = DBHelper(requireContext())
+        val db = dbHelper.readableDatabase
+        val nomesUsuarios = mutableListOf("Selecione o responsável")
+
+        val cursor = db.rawQuery("SELECT papel FROM usuario WHERE papel IN ('apoio', 'coordenador')", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                nomesUsuarios.add(cursor.getString(0))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, nomesUsuarios)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerResponsavel.adapter = adapter
 
         val args = ActivitieRegisterArgs.fromBundle(requireArguments())
         acaoId = args.acaoId
@@ -67,7 +88,7 @@ class ActivitieRegister : function_arrow_back() {
         btnEnviar.setOnClickListener {
             val titulo = edtTitulo.text.toString()
             val descricao = edtDescricao.text.toString()
-            val responsavel = edtResponsavel.text.toString()
+            val responsavel = spinnerResponsavel.selectedItem.toString()
             val orcamento = edtOrcamento.text.toString().toDoubleOrNull() ?: 0.0
             val dataInicio = edtStartDate.text.toString()
             val dataFim = edtEndDate.text.toString()
