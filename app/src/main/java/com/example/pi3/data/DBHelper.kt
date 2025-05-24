@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class DBHelper(context: Context) : SQLiteOpenHelper(
-    context, "seuprojeto.db", null, 1
+    context, "seuprojeto.db", null, 2
 ) {
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_ACTIONS_TABLE = """
