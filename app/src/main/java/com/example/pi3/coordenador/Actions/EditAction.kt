@@ -13,9 +13,14 @@ import com.example.pi3.adapters.function_arrow_back
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.DBHelper
 import com.example.pi3.model.Action
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
+
 
 class EditAction : function_arrow_back() {
+
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText
@@ -122,12 +127,15 @@ class EditAction : function_arrow_back() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _, selectedYear, selectedMonth, selectedDay ->
-                editText.setText("$selectedDay/${selectedMonth + 1}/$selectedYear")
+                val cal = Calendar.getInstance()
+                cal.set(selectedYear, selectedMonth, selectedDay)
+                editText.setText(dateFormat.format(cal.time))  // Formato yyyy-MM-dd
             },
             year, month, day
         )
         datePickerDialog.show()
     }
+
 
     private fun enviarDados() {
         // Validação básica
