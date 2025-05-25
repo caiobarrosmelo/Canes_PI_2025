@@ -2,6 +2,7 @@ package com.example.pi3.apoio.activities
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,12 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 import com.example.pi3.adapters.function_arrow_back
+import com.example.pi3.coordenador.Actions.EditActionArgs
+import com.example.pi3.coordenador.activities.ActivitieRegisterArgs
+import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.ActivitieRepository
 import com.example.pi3.data.DBHelper
+import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -33,7 +38,7 @@ class ActivitieRegister : function_arrow_back() {
 
     private var acaoId: Long = -1
 
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
 
     override fun onCreateView(
@@ -73,7 +78,7 @@ class ActivitieRegister : function_arrow_back() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerResponsavel.adapter = adapter
 
-        val args = com.example.pi3.coordenador.activities.ActivitieRegisterArgs.fromBundle(requireArguments())
+        val args = ActivitieRegisterArgs.fromBundle(requireArguments())
         acaoId = args.acaoId
 
         // Abertura do DatePicker ao tocar nos campos
@@ -110,7 +115,7 @@ class ActivitieRegister : function_arrow_back() {
                 repository.insertActivitie(activitie)
 
                 // Exibir mensagem de sucesso
-                Toast.makeText(requireContext(), "Atividade registrada, aguardando aprovação.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Atividade registrada!", Toast.LENGTH_SHORT).show()
 
                 // Voltar para a tela anterior
                 findNavController().popBackStack()

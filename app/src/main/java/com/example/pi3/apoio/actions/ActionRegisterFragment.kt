@@ -28,7 +28,7 @@ class ActionRegisterFragment : function_arrow_back() {
     private lateinit var edtEndDate: EditText
     private lateinit var btnEnviar: Button
 
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private var pilarSelecionado: String? = null
 
@@ -130,4 +130,5 @@ class ActionRegisterFragment : function_arrow_back() {
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
+
 }
