@@ -14,12 +14,21 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.example.pi3.model.Activitie
+import com.example.pi3.model.Action
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import android.widget.Button
+import android.content.Intent
+import java.util.Calendar
 
 class Gestor : AppCompatActivity() {
     private lateinit var spinnerPilar: Spinner
     private lateinit var pieChartAcoes: PieChart
-    private lateinit var pieChartAtividades: PieChart
     private lateinit var actionRepository: ActionRepository
+    private lateinit var btnExportReport: Button
+    private lateinit var btnHistory: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +37,9 @@ class Gestor : AppCompatActivity() {
         // Inicialização dos componentes
         spinnerPilar = findViewById(R.id.spinnerPilar)
         pieChartAcoes = findViewById(R.id.pieChartAcoes)
-        pieChartAtividades = findViewById(R.id.pieChartAtividades)
         actionRepository = ActionRepository(this)
+        btnExportReport = findViewById(R.id.btnExportReport)
+        btnHistory = findViewById(R.id.btnHistory)
 
         // Configuração do Spinner de Pilares
         val pilares = arrayOf("Todos", "1. Suporte da alta administração", "2. Instância responsável",
@@ -70,18 +80,8 @@ class Gestor : AppCompatActivity() {
             legend.textColor = Color.WHITE
             setEntryLabelColor(Color.WHITE)
             setEntryLabelTextSize(12f)
-        }
-
-        // Configuração do gráfico de atividades
-        pieChartAtividades.apply {
-            description.isEnabled = false
-            isDrawHoleEnabled = true
-            setHoleColor(Color.TRANSPARENT)
-            setTransparentCircleRadius(0f)
-            legend.isEnabled = true
-            legend.textColor = Color.WHITE
-            setEntryLabelColor(Color.WHITE)
-            setEntryLabelTextSize(12f)
+            setDrawEntryLabels(false)
+            setUsePercentValues(true)
         }
     }
 
@@ -93,35 +93,51 @@ class Gestor : AppCompatActivity() {
             actionRepository.getAllActions()
         } else {
             actionRepository.getActionsByPilar(pilarSelecionado)
-        }
+        }.filter { it.aprovada }
 
-        // Preparar dados para o gráfico de ações
-        val acoesAprovadas = acoes.count { action -> action.aprovada }
-        val acoesPendentes = acoes.size - acoesAprovadas
+        // Contar status das ações
+        val acoesConcluidas = acoes.count { isActionConcluida(it) }
+        val acoesEmAndamento = acoes.count { isActionEmAndamento(it) }
+        val acoesAtrasadas = acoes.count { isActionAtrasada(it) }
 
         val entriesAcoes = listOf(
-            PieEntry(acoesAprovadas.toFloat(), "Aprovadas"),
-            PieEntry(acoesPendentes.toFloat(), "Pendentes")
+            PieEntry(acoesConcluidas.toFloat(), "Concluídas"),
+            PieEntry(acoesEmAndamento.toFloat(), "Em andamento"),
+            PieEntry(acoesAtrasadas.toFloat(), "Atrasadas")
         )
 
-        val dataSetAcoes = PieDataSet(entriesAcoes, "Status das Ações")
-        dataSetAcoes.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        val dataSetAcoes = PieDataSet(entriesAcoes, "")
+        val colors = listOf(
+            Color.parseColor("#006400"),
+            Color.parseColor("#FFC107"),
+            Color.parseColor("#8B0000")
+        )
+        dataSetAcoes.colors = colors
         pieChartAcoes.data = PieData(dataSetAcoes)
         pieChartAcoes.invalidate()
+    }
 
-        // Preparar dados para o gráfico de atividades
-        val atividades = acoes.flatMap { action -> actionRepository.getActivitiesByActionId(action.id) }
-        val atividadesConcluidas = atividades.count { atividade -> atividade.status }
-        val atividadesPendentes = atividades.size - atividadesConcluidas
+    private fun isActionConcluida(action: Action): Boolean {
+        val atividades = actionRepository.getActivitiesByActionId(action.id)
+        return atividades.isNotEmpty() && atividades.all { it.status == Activitie.STATUS_CONCLUIDA }
+    }
 
-        val entriesAtividades = listOf(
-            PieEntry(atividadesConcluidas.toFloat(), "Concluídas"),
-            PieEntry(atividadesPendentes.toFloat(), "Pendentes")
-        )
+    private fun isActionEmAndamento(action: Action): Boolean {
+        val atividades = actionRepository.getActivitiesByActionId(action.id)
+        val hoje = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        val dataSetAtividades = PieDataSet(entriesAtividades, "Status das Atividades")
-        dataSetAtividades.colors = ColorTemplate.MATERIAL_COLORS.toList()
-        pieChartAtividades.data = PieData(dataSetAtividades)
-        pieChartAtividades.invalidate()
+        val temAtividadeEmAndamento = atividades.any { it.status == Activitie.STATUS_EM_ANDAMENTO && dateFormat.parse(it.dataFim)?.after(hoje) == true }
+        val temAtividadeAtrasada = atividades.any { it.status != Activitie.STATUS_CONCLUIDA && dateFormat.parse(it.dataFim)?.before(hoje) == true }
+
+        return atividades.isNotEmpty() && temAtividadeEmAndamento && !temAtividadeAtrasada && !isActionConcluida(action)
+    }
+
+    private fun isActionAtrasada(action: Action): Boolean {
+        val atividades = actionRepository.getActivitiesByActionId(action.id)
+        val hoje = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        return atividades.any { it.status != Activitie.STATUS_CONCLUIDA && dateFormat.parse(it.dataFim)?.before(hoje) == true }
     }
 }

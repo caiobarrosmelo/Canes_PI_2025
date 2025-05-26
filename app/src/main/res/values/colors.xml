@@ -6,4 +6,6 @@
     <color name="azul2">#03A9F4</color>
     <color name="azul3">#010945</color>
     <color name="vermelho">#F44336</color>
+    <color name="dark_green">#006400</color>
+    <color name="dark_blue">#00008B</color>
 </resources>

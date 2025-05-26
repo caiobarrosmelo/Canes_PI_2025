@@ -11,16 +11,35 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Saudação -->
-        <TextView
-            android:id="@+id/textViewGreeting"
-            android:layout_marginTop="60dp"
-            android:layout_width="wrap_content"
+        <!-- Saudação e Sair -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Olá, Gestor"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Olá, Gestor"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/textViewLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sair →"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:focusable="true"/>
+        </RelativeLayout>
 
         <!-- Spinner de Pilar -->
         <Spinner
@@ -36,7 +55,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ações por Status"
+            android:text="Status das Ações"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
@@ -44,22 +63,28 @@
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChartAcoes"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:layout_marginBottom="24dp"/>
 
-        <!-- Gráfico de Atividades -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Atividades por Status"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChartAtividades"
+        <!-- Botão Exportar relatório -->
+        <Button
+            android:id="@+id/btnExportReport"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="wrap_content"
+            android:text="Exportar relatório"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/azul"/>
+
+        <!-- Botão Histórico -->
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Histórico"
+            android:layout_marginTop="16dp"
+             android:textColor="@android:color/white"
+            android:backgroundTint="@color/azul"/>
 
     </LinearLayout>
 

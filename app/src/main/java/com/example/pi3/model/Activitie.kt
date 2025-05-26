@@ -8,7 +8,13 @@ data class Activitie(
     val orcamento: Double,
     val dataInicio: String,
     val dataFim: String,
-    var status: Boolean = false,
+    var status: Int = STATUS_EM_ANDAMENTO,
     val aprovada: Boolean = false,
     val acaoId: Long
-)
+) {
+    companion object {
+        const val STATUS_EM_ANDAMENTO = 0
+        const val STATUS_CONCLUIDA = 1
+        const val STATUS_ATRASADA = 2
+    }
+}

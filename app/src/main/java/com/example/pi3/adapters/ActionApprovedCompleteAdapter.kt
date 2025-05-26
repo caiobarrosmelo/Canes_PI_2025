@@ -1,7 +1,5 @@
 package com.example.pi3.adapters
 
-
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,7 @@ import com.example.pi3.listeners.OnClickToEditActionListener
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.listeners.OnActivityStatusChangedListener
 import com.example.pi3.model.Action
-
+import com.example.pi3.model.Activitie
 
 class ActionApprovedCompleteAdapter(
      private val action: Action,
@@ -49,11 +47,10 @@ class ActionApprovedCompleteAdapter(
             }
         }
 
-
         fun updateProgress() {
             val atividades = repository.getActivitiesByActionId(action.id)
             val total = atividades.size
-            val concluidas = atividades.count { it.status }
+            val concluidas = atividades.count { it.status == Activitie.STATUS_CONCLUIDA }
             val progressoPercentual = if (total > 0) (concluidas * 100 / total) else 0
 
             //Animação suave
@@ -63,9 +60,6 @@ class ActionApprovedCompleteAdapter(
             animation.interpolator = DecelerateInterpolator()
             animation.start()
         }
-
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -82,10 +76,7 @@ class ActionApprovedCompleteAdapter(
         holder.bind(action)
     }
 
-
     override fun onActivityStatusChanged() {
         notifyDataSetChanged() // Re-renderiza o item para atualizar o progresso
     }
-
-
 }
