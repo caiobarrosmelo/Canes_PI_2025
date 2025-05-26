@@ -206,7 +206,7 @@ class ActionRepository(context: Context) {
                     orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow("orcamento")),
                     dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("data_inicio")),
                     dataFim = cursor.getString(cursor.getColumnIndexOrThrow("data_fim")),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow("status")) == 1,
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow("status")),
                     aprovada = cursor.getInt(cursor.getColumnIndexOrThrow("aprovada")) == 1,
                     acaoId = cursor.getLong(cursor.getColumnIndexOrThrow("acao_id"))
                 )

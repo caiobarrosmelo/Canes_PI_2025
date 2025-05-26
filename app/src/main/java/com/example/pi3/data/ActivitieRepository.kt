@@ -18,7 +18,7 @@ class ActivitieRepository(context: Context) {
             put(TableActivities.COLUMN_ORCAMENTO, activitie.orcamento)
             put(TableActivities.COLUMN_DATA_INICIO, activitie.dataInicio)
             put(TableActivities.COLUMN_DATA_FIM, activitie.dataFim)
-            put(TableActivities.COLUMN_STATUS, if (activitie.status) 1 else 0)
+            put(TableActivities.COLUMN_STATUS, activitie.status)
             put(TableActivities.COLUMN_APROVADA, if (activitie.aprovada) 1 else 0)
             put(TableActivities.COLUMN_ACAO_ID, activitie.acaoId)
         }
@@ -51,7 +51,7 @@ class ActivitieRepository(context: Context) {
                         orcamento = it.getDouble(it.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
                         dataInicio = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
                         dataFim = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                        status = it.getInt(it.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)) == 1,
+                        status = it.getInt(it.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
                         aprovada = false,
                         acaoId = it.getLong(it.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
                     )
@@ -68,7 +68,7 @@ class ActivitieRepository(context: Context) {
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ?", // Alterado para filtrar por aprovada
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ?",
             arrayOf(acaoId.toString(), "1"),
             null,
             null,
@@ -84,7 +84,7 @@ class ActivitieRepository(context: Context) {
                     orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
                     dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
                     dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)) == 1,
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
                     aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
                     acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
                 )
@@ -94,10 +94,42 @@ class ActivitieRepository(context: Context) {
         return activities
     }
 
-    fun atualizarStatusAtividade(id: Long, status: Boolean): Boolean {
+    fun getAllApprovedActivities(): List<Activitie> {
+        val activities = mutableListOf<Activitie>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.query(
+            TableActivities.TABLE_NAME,
+            null,
+            "${TableActivities.COLUMN_APROVADA} = ?",
+            arrayOf("1"),
+            null,
+            null,
+            "${TableActivities.COLUMN_DATA_FIM} DESC" // Opcional: ordenar por data de fim descendente
+        )
+        while (cursor.moveToNext()) {
+            activities.add(
+                Activitie(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
+                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
+                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
+                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
+                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
+                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
+                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
+                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
+                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
+                )
+            )
+        }
+        cursor.close()
+        return activities
+    }
+
+    fun atualizarStatusAtividade(id: Long, status: Int): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put(TableActivities.COLUMN_STATUS, if (status) 1 else 0)
+            put(TableActivities.COLUMN_STATUS, status)
         }
         val rowsUpdated = db.update(
             TableActivities.TABLE_NAME,
@@ -162,7 +194,7 @@ class ActivitieRepository(context: Context) {
                     orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
                     dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
                     dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)) == 1,
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
                     aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
                     acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
                 )

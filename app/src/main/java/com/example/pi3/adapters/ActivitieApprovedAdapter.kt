@@ -1,6 +1,5 @@
 package com.example.pi3.adapters
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,7 @@ import com.example.pi3.listeners.OnActivityStatusChangedListener
 import com.example.pi3.listeners.OnDetailsActivityClicked
 import com.example.pi3.model.Activitie
 
-
-class ActivitieApprovedAdapter (
+class ActivitieApprovedAdapter(
     private val activities: List<Activitie>,
     private val repository: ActivitieRepository,
     private val statusChangedListener: OnActivityStatusChangedListener? = null,
@@ -28,43 +26,26 @@ class ActivitieApprovedAdapter (
 
         fun bind(activitie: Activitie, position: Int) {
             titulo.text = activitie.titulo
-            box.isChecked = activitie.status // Vincula ao campo status
+            box.isChecked = activitie.status == Activitie.STATUS_CONCLUIDA
 
             box.setOnCheckedChangeListener { _, isChecked ->
-                val currentActivitie = activities[position] // Usa a posição passada
-                currentActivitie.status = isChecked // Atualiza o campo local
+                val currentActivitie = activities[position]
+                val newStatus = if (isChecked) Activitie.STATUS_CONCLUIDA else Activitie.STATUS_EM_ANDAMENTO
 
-                if (isChecked) {
-                    if (repository.atualizarStatusAtividade(currentActivitie.id, true)) {
-                        Toast.makeText(
-                            itemView.context,
-                            "${currentActivitie.titulo} marcada como concluída",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        statusChangedListener?.onActivityStatusChanged()
-                    }
-                } else {
-                    if (repository.atualizarStatusAtividade(currentActivitie.id, false)) {
-                        Toast.makeText(
-                            itemView.context,
-                            "${currentActivitie.titulo} marcada como não concluída",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        statusChangedListener?.onActivityStatusChanged()
-                    }
+                if (repository.atualizarStatusAtividade(currentActivitie.id, newStatus)) {
+                    Toast.makeText(
+                        itemView.context,
+                        "${currentActivitie.titulo} marcada como ${if (isChecked) "concluída" else "não concluída"}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    statusChangedListener?.onActivityStatusChanged()
                 }
             }
-
 
             itemView.setOnClickListener {
                 listener?.onActivityViewClicked(activitie.id)
             }
-
-
-
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -78,5 +59,4 @@ class ActivitieApprovedAdapter (
     }
 
     override fun getItemCount(): Int = activities.size
-
 }

@@ -33,11 +33,9 @@ class ActivityApprovedCompleteAdapter(
             dataInicio.text = activity.dataInicio
             dataFim.text = activity.dataFim
 
-            if (activity.status) {
-
+            if (activity.status == Activitie.STATUS_CONCLUIDA) {
                 txtConcluido.visibility = View.VISIBLE
             } else {
-
                 txtConcluido.visibility = View.GONE
             }
             // ✅ Só mostra o botão de editar se o listener estiver presente
