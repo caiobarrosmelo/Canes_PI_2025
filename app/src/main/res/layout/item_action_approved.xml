@@ -15,6 +15,24 @@
         android:padding="16dp"
         android:orientation="vertical">
 
+        <ImageButton
+            android:id="@+id/btnExpiringActivities"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ver atividades próximas a expirar"
+            android:src="@drawable/doorbell"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/azul"
+            android:layout_gravity="end"
+            />
+
+
+
+
 
         <TextView
             android:id="@+id/txtTitulo"
