@@ -30,10 +30,6 @@
             android:layout_gravity="end"
             />
 
-
-
-
-
         <TextView
             android:id="@+id/txtTitulo"
             android:layout_width="match_parent"
