@@ -15,6 +15,7 @@ import com.example.pi3.adapters.ActionApprovedAdapter
 import com.example.pi3.adapters.setupPilarSpinner
 import com.example.pi3.listeners.OnClickToActionDetailsListener
 import com.example.pi3.data.ActionRepository
+import com.example.pi3.data.ActivitieRepository
 
 
 class HomeApoioFragment : Fragment(),
@@ -23,6 +24,7 @@ class HomeApoioFragment : Fragment(),
     private lateinit var spinnerPilar: Spinner
     private lateinit var recyclerView: RecyclerView
     private lateinit var repository: ActionRepository
+    private lateinit var activityRepository: ActivitieRepository
     private lateinit var btnRegistrar: Button
 
     override fun onCreateView(
@@ -39,6 +41,7 @@ class HomeApoioFragment : Fragment(),
         recyclerView = view.findViewById(R.id.recyclerViewApproved)
         btnRegistrar = view.findViewById(R.id.btnRegistrar)
         repository = ActionRepository(requireContext())
+        activityRepository = ActivitieRepository(requireContext())
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -61,7 +64,7 @@ class HomeApoioFragment : Fragment(),
     private fun carregarAcoesAprovadas(pilar: String) {
         val acoes = repository.getApprovedActionsByPillar(pilar)
         recyclerView.adapter = ActionApprovedAdapter(
-            acoes, repository, this,
+            acoes, repository, activityRepository, this,
 
             )
     }
