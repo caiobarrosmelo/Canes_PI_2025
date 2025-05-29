@@ -91,7 +91,7 @@ class ActivitieDetailActivity : AppCompatActivity() {
     }
 
     private fun changeStatusToConcluida(id: Long) {
-        val success = activitieRepository.atualizarStatusAtividade(id, Activitie.STATUS_CONCLUIDA)
+        val success = activitieRepository.updateActivitieStatus(id, Activitie.STATUS_CONCLUIDA)
         if (success) {
             Toast.makeText(this, "Status atualizado para Concluída", Toast.LENGTH_SHORT).show()
             loadActivitieDetails(id) // Recarrega os detalhes para atualizar a tela

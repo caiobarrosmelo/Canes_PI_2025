@@ -4,15 +4,25 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import com.example.pi3.model.Activitie
+import com.example.pi3.data.TableActivities // Importar TableActivities
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
+
+// Constantes para os status das atividades
+object StatusAtividade {
+    const val PENDENTE_APROVACAO_INICIAL = 0
+    const val EM_PROCESSO = 1
+    const val PENDENTE_APROVACAO_CONCLUSAO = 2
+    const val CONCLUIDA = 3
+    const val REJEITADA_CONCLUSAO = 4
+    const val REJEITADA_INICIAL = 5
+}
 
 class ActivitieRepository(context: Context) {
 
     private val dbHelper = DBHelper(context)
 
-    fun insertActivitie(activitie: Activitie) {
+    fun insertActivitie(activitie: Activitie): Long {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(TableActivities.COLUMN_TITULO, activitie.titulo)
@@ -25,18 +35,34 @@ class ActivitieRepository(context: Context) {
             put(TableActivities.COLUMN_APROVADA, if (activitie.aprovada) 1 else 0)
             put(TableActivities.COLUMN_ACAO_ID, activitie.acaoId)
         }
-        val result = db.insert(TableActivities.TABLE_NAME, null, values)
-        Log.d("ActivitieRepository", "Inserção na tabela ${TableActivities.TABLE_NAME}: result=$result")
+        val newRowId = db.insert(TableActivities.TABLE_NAME, null, values)
+        db.close()
+        Log.d("ActivitieRepository", "Inserção na tabela ${TableActivities.TABLE_NAME}: result=$newRowId")
+        return newRowId
     }
 
+    private fun cursorToActivitie(cursor: android.database.Cursor): Activitie {
+         return Activitie(
+            id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
+            titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
+            descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
+            responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
+            orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
+            dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
+            dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
+            status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
+            aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
+            acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
+        )
+    }
 
-    fun getUnapprovedActivities(): List<Activitie> {
+    fun getActivitiesPendingApproval(): List<Activitie> {
         val db = dbHelper.readableDatabase
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_APROVADA} = 0",
-            null,
+            "${TableActivities.COLUMN_APROVADA} = ? AND ${TableActivities.COLUMN_STATUS} = ?",
+            arrayOf("0", StatusAtividade.PENDENTE_APROVACAO_INICIAL.toString()),
             null,
             null,
             null
@@ -45,23 +71,30 @@ class ActivitieRepository(context: Context) {
         val lista = mutableListOf<Activitie>()
         cursor.use {
             while (it.moveToNext()) {
-                lista.add(
-                    Activitie(
-                        id = it.getLong(it.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                        titulo = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                        descricao = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                        responsavel = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                        orcamento = it.getDouble(it.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                        dataInicio = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                        dataFim = it.getString(it.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                        status = it.getInt(it.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                        aprovada = false,
-                        acaoId = it.getLong(it.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-                    )
-                )
+                lista.add(cursorToActivitie(it))
             }
         }
+        return lista
+    }
 
+    fun getActivitiesPendingCompletionApproval(): List<Activitie> {
+        val db = dbHelper.readableDatabase
+        val cursor = db.query(
+            TableActivities.TABLE_NAME,
+            null,
+            "${TableActivities.COLUMN_APROVADA} = ? AND ${TableActivities.COLUMN_STATUS} = ?",
+            arrayOf("1", StatusAtividade.PENDENTE_APROVACAO_CONCLUSAO.toString()),
+            null,
+            null,
+            null
+        )
+
+        val lista = mutableListOf<Activitie>()
+        cursor.use {
+            while (it.moveToNext()) {
+                lista.add(cursorToActivitie(it))
+            }
+        }
         return lista
     }
 
@@ -78,20 +111,7 @@ class ActivitieRepository(context: Context) {
             null
         )
         while (cursor.moveToNext()) {
-            activities.add(
-                Activitie(
-                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
-                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-                )
-            )
+            activities.add(cursorToActivitie(cursor))
         }
         cursor.close()
         return activities
@@ -107,29 +127,16 @@ class ActivitieRepository(context: Context) {
             arrayOf("1"),
             null,
             null,
-            "${TableActivities.COLUMN_DATA_FIM} DESC" // Opcional: ordenar por data de fim descendente
+            "${TableActivities.COLUMN_DATA_FIM} DESC"
         )
         while (cursor.moveToNext()) {
-            activities.add(
-                Activitie(
-                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
-                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-                )
-            )
+            activities.add(cursorToActivitie(cursor))
         }
         cursor.close()
         return activities
     }
 
-    fun atualizarStatusAtividade(id: Long, status: Int): Boolean {
+    fun updateActivitieStatus(id: Long, status: Int): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(TableActivities.COLUMN_STATUS, status)
@@ -144,11 +151,27 @@ class ActivitieRepository(context: Context) {
         return rowsUpdated > 0
     }
 
+     fun updateActivitieAprovada(id: Long, aprovada: Boolean): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put(TableActivities.COLUMN_APROVADA, if (aprovada) 1 else 0)
+        }
+        val rowsUpdated = db.update(
+            TableActivities.TABLE_NAME,
+            values,
+            "${TableActivities.COLUMN_ID} = ?",
+            arrayOf(id.toString())
+        )
+        db.close()
+        return rowsUpdated > 0
+    }
 
-    fun aprovarAtividade(id: Long): Boolean {
+    fun aprovarAtividadeInicial(id: Long): Boolean {
+        // Marca como aprovada (aprovada = 1) e define status para EM_PROCESSO
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(TableActivities.COLUMN_APROVADA, 1)
+            put(TableActivities.COLUMN_STATUS, StatusAtividade.EM_PROCESSO)
         }
         val rowsUpdated = db.update(
             TableActivities.TABLE_NAME,
@@ -161,10 +184,12 @@ class ActivitieRepository(context: Context) {
     }
 
 
-    fun desaprovarAtividade(id: Long): Boolean {
-        val db = dbHelper.writableDatabase
+    fun desaprovarAtividadeInicial(id: Long): Boolean {
+        // Marca como não aprovada (aprovada = 0) e define status para REJEITADA_INICIAL
+         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put(TableActivities.COLUMN_APROVADA, 0)
+            put(TableActivities.COLUMN_STATUS, StatusAtividade.REJEITADA_INICIAL)
         }
         val rowsUpdated = db.update(
             TableActivities.TABLE_NAME,
@@ -174,6 +199,21 @@ class ActivitieRepository(context: Context) {
         )
         db.close()
         return rowsUpdated > 0
+    }
+
+    fun marcarComoConcluidaPendenteAprovacao(id: Long): Boolean {
+        // Marca status como PENDENTE_APROVACAO_CONCLUSAO (aprovada já deve ser 1)
+        return updateActivitieStatus(id, StatusAtividade.PENDENTE_APROVACAO_CONCLUSAO)
+    }
+
+    fun aprovarConclusaoAtividade(id: Long): Boolean {
+        // Marca status como CONCLUIDA (aprovada já deve ser 1)
+        return updateActivitieStatus(id, StatusAtividade.CONCLUIDA)
+    }
+
+    fun rejeitarConclusaoAtividade(id: Long): Boolean {
+        // Marca status como REJEITADA_CONCLUSAO, voltando para EM_PROCESSO (aprovada já deve ser 1)
+        return updateActivitieStatus(id, StatusAtividade.EM_PROCESSO)
     }
 
     fun getActivityById(id: Long): Activitie? {
@@ -189,18 +229,7 @@ class ActivitieRepository(context: Context) {
         )
         return try {
             if (cursor.moveToFirst()) {
-                Activitie(
-                    id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                    descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                    responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                    orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                    dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                    dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                    status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                    aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
-                    acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-                )
+                cursorToActivitie(cursor)
             } else {
                 null
             }
@@ -220,72 +249,38 @@ class ActivitieRepository(context: Context) {
         return rowsAffected > 0
     }
 
-
     fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
-        val currentDate = Calendar.getInstance()
-        val thirtyDaysLater = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 30) }
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val currentDateStr = dateFormat.format(currentDate.time)
-        val thirtyDaysLaterStr = dateFormat.format(thirtyDaysLater.time)
-
-        Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId expirando entre $currentDateStr e $thirtyDaysLaterStr")
+        val thirtyDaysInMillis = System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000 // 30 dias em milissegundos
 
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ? AND ${TableActivities.COLUMN_STATUS} != ? AND ${TableActivities.COLUMN_DATA_FIM} BETWEEN ? AND ?", // MODIFIED: Added status filter
-            arrayOf(acaoId.toString(), "1", "1", currentDateStr, thirtyDaysLaterStr), // MODIFIED: Added "1" for status
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ?",
+            arrayOf(acaoId.toString(), "1"),
             null,
             null,
-            "${TableActivities.COLUMN_DATA_FIM} ASC"
+            null
         )
 
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
         while (cursor.moveToNext()) {
-            val activity = Activitie(
-                id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
-                titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
-                descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
-                responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
-                orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
-                dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
-                dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
-                status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1, // MODIFIED: Use Int directly, was == 1
-                acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
-            )
-            activities.add(activity)
-            Log.d("ActivitieRepository", "Atividade encontrada: ID=${activity.id}, Título=${activity.titulo}, DataFim=${activity.dataFim}, Status=${activity.status}") // NEW: Added Status to log
+            val activitie = cursorToActivitie(cursor)
+            try {
+                val endDate = dateFormat.parse(activitie.dataFim)
+                if (endDate != null && endDate.time <= thirtyDaysInMillis) {
+                     activities.add(activitie)
+                }
+            } catch (e: Exception) {
+                // Tratar erro de parsing, se necessário
+                Log.e("ActivitieRepository", "Erro ao parsear data: ${activitie.dataFim}", e)
+            }
         }
         cursor.close()
         return activities
     }
-
-    fun calculateDaysRemaining(dataFim: String?): Long {
-        if (dataFim.isNullOrEmpty()) return 0
-        try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val endDate = dateFormat.parse(dataFim) ?: return 0
-            val currentDate = Calendar.getInstance().time
-            val diffMillis = endDate.time - currentDate.time
-            return (diffMillis / (1000 * 60 * 60 * 24)).coerceAtLeast(0)
-        } catch (e: Exception) {
-            Log.e("ActivitieRepository", "Erro ao calcular dias restantes: $e")
-            return 0
-        }
-    }
-
-
-
-
-
-
-
-
-
-
 }
 
 

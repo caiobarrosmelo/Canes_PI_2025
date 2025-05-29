@@ -59,6 +59,13 @@ class ActivitieUnapprovedAdapter(
         activities.addAll(newList)
         notifyDataSetChanged()
     }
+
+    fun atualizarLista(novasAtividades: List<Activitie>) {
+        activities.clear()
+        activities.addAll(novasAtividades)
+        notifyDataSetChanged()
+    }
+
     fun getCurrentList(): List<Activitie> = activities
 
 

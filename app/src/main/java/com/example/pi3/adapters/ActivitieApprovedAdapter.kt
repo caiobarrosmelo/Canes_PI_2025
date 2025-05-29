@@ -32,7 +32,7 @@ class ActivitieApprovedAdapter(
                 val currentActivitie = activities[position]
                 val newStatus = if (isChecked) Activitie.STATUS_CONCLUIDA else Activitie.STATUS_EM_ANDAMENTO
 
-                if (repository.atualizarStatusAtividade(currentActivitie.id, newStatus)) {
+                if (repository.updateActivitieStatus(currentActivitie.id, newStatus)) {
                     Toast.makeText(
                         itemView.context,
                         "${currentActivitie.titulo} marcada como ${if (isChecked) "concluída" else "não concluída"}",
