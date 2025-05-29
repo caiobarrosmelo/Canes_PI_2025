@@ -9,4 +9,6 @@
     <color name="amarelo">#FF9D00</color>
     <color name="dark_green">#006400</color>
     <color name="dark_blue">#00008B</color>
+    <color name="orange">#FFA500</color> <!-- NEW: Orange for 16–30 days -->
+    <color name="red">#FF0000</color>
 </resources>
