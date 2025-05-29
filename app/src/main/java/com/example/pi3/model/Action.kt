@@ -9,5 +9,6 @@ data class Action(
     val dataInicio: String,
     val dataFim: String,
     val pilar: String,
-    val aprovada: Boolean = false
+    val aprovada: Boolean = false,
+    val status: Int = 0 // Campo de status temporário para compilação
 )

@@ -22,6 +22,7 @@ import java.util.Locale
 import android.widget.Button
 import android.content.Intent
 import java.util.Calendar
+import com.github.mikephil.charting.components.Legend
 
 class Gestor : AppCompatActivity() {
     private lateinit var spinnerPilar: Spinner
@@ -67,6 +68,12 @@ class Gestor : AppCompatActivity() {
 
         // Carregar dados iniciais
         updateCharts()
+
+        // Configuração do botão Histórico
+        btnHistory.setOnClickListener {
+            val intent = Intent(this, HistoricoActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupPieCharts() {
@@ -76,8 +83,21 @@ class Gestor : AppCompatActivity() {
             isDrawHoleEnabled = true
             setHoleColor(Color.TRANSPARENT)
             setTransparentCircleRadius(0f)
-            legend.isEnabled = true
-            legend.textColor = Color.WHITE
+
+            // Configuração da legenda
+            legend.apply {
+                isEnabled = true
+                textColor = Color.BLACK // Usar texto preto para melhor contraste no fundo branco
+                textSize = 12f
+                verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                orientation = Legend.LegendOrientation.HORIZONTAL
+                setDrawInside(false)
+                xEntrySpace = 10f
+                yEntrySpace = 5f
+                setWordWrapEnabled(true)
+            }
+
             setEntryLabelColor(Color.WHITE)
             setEntryLabelTextSize(12f)
             setDrawEntryLabels(false)

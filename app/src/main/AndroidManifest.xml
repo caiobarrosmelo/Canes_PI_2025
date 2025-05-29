@@ -35,6 +35,12 @@
             android:name=".gestor.Gestor"
             android:exported="true">
           </activity>
+
+        <activity
+            android:name=".gestor.HistoricoActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>
