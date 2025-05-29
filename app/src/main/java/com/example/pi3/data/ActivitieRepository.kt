@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import com.example.pi3.model.Activitie
 import com.example.pi3.data.TableActivities // Importar TableActivities
+import java.text.SimpleDateFormat
+import java.util.*
 
 // Constantes para os status das atividades
 object StatusAtividade {
@@ -245,6 +247,39 @@ class ActivitieRepository(context: Context) {
         )
         db.close()
         return rowsAffected > 0
+    }
+
+    fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
+        val activities = mutableListOf<Activitie>()
+        val db = dbHelper.readableDatabase
+        val thirtyDaysInMillis = System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000 // 30 dias em milissegundos
+
+        val cursor = db.query(
+            TableActivities.TABLE_NAME,
+            null,
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ?",
+            arrayOf(acaoId.toString(), "1"),
+            null,
+            null,
+            null
+        )
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        while (cursor.moveToNext()) {
+            val activitie = cursorToActivitie(cursor)
+            try {
+                val endDate = dateFormat.parse(activitie.dataFim)
+                if (endDate != null && endDate.time <= thirtyDaysInMillis) {
+                     activities.add(activitie)
+                }
+            } catch (e: Exception) {
+                // Tratar erro de parsing, se necessário
+                Log.e("ActivitieRepository", "Erro ao parsear data: ${activitie.dataFim}", e)
+            }
+        }
+        cursor.close()
+        return activities
     }
 }
 
