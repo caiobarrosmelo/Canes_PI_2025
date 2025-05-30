@@ -23,15 +23,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Histórico Geral"
+            android:text="Histórico"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Spinner de Filtro -->
+        <!-- Spinners de Filtro -->
         <Spinner
-            android:id="@+id/spinnerFilter"
+            android:id="@+id/spinnerFilterType"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerFilterStatus"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/spinner_background"
@@ -39,7 +48,7 @@
             android:spinnerMode="dropdown"
             android:layout_marginBottom="16dp"/>
 
-        <!-- RecyclerView para a lista de atividades -->
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewHistorico"
             android:layout_width="match_parent"
