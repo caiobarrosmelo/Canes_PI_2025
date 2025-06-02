@@ -13,6 +13,7 @@ import com.example.pi3.model.Activitie
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.example.pi3.data.ActionRepository
 
 class ActivitieDetailActivity : AppCompatActivity() {
 
@@ -24,8 +25,10 @@ class ActivitieDetailActivity : AppCompatActivity() {
     private lateinit var textViewActivitieDetailDataFim: TextView
     private lateinit var textViewActivitieDetailStatus: TextView
     private lateinit var buttonChangeStatus: Button
+    private lateinit var textViewLinkedActionTitle: TextView
 
     private lateinit var activitieRepository: ActivitieRepository
+    private lateinit var actionRepository: ActionRepository
     private var activitieId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +43,10 @@ class ActivitieDetailActivity : AppCompatActivity() {
         textViewActivitieDetailDataFim = findViewById(R.id.textViewActivitieDetailDataFim)
         textViewActivitieDetailStatus = findViewById(R.id.textViewActivitieDetailStatus)
         buttonChangeStatus = findViewById(R.id.buttonChangeStatus)
+        textViewLinkedActionTitle = findViewById(R.id.textViewLinkedActionTitle)
 
         activitieRepository = ActivitieRepository(this)
+        actionRepository = ActionRepository(this)
 
         activitieId = intent.getLongExtra("activitie_id", -1)
 
@@ -67,6 +72,10 @@ class ActivitieDetailActivity : AppCompatActivity() {
             textViewActivitieDetailDataInicio.text = "Data Início: ${activitie.dataInicio}"
             textViewActivitieDetailDataFim.text = "Data Fim: ${activitie.dataFim}"
             textViewActivitieDetailStatus.text = "Status: ${getStatusString(activitie.status)}"
+
+            // Buscar e exibir o título da Ação ligada
+            val linkedAction = actionRepository.getActionById(activitie.acaoId)
+            textViewLinkedActionTitle.text = linkedAction?.titulo ?: "Ação não encontrada"
 
             // Habilitar/desabilitar botão de mudança de status
             if (activitie.status == Activitie.STATUS_CONCLUIDA) {

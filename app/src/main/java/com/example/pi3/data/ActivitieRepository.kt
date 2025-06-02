@@ -281,6 +281,25 @@ class ActivitieRepository(context: Context) {
         cursor.close()
         return activities
     }
+
+    fun getApprovedActivitiesByResponsavel(responsavel: String): List<Activitie> {
+        val activities = mutableListOf<Activitie>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.query(
+            TableActivities.TABLE_NAME,
+            null,
+            "${TableActivities.COLUMN_APROVADA} = ? AND LOWER(${TableActivities.COLUMN_RESPONSAVEL}) = ?",
+            arrayOf("1", responsavel.lowercase()),
+            null,
+            null,
+            "${TableActivities.COLUMN_DATA_FIM} DESC"
+        )
+        while (cursor.moveToNext()) {
+            activities.add(cursorToActivitie(cursor))
+        }
+        cursor.close()
+        return activities
+    }
 }
 
 

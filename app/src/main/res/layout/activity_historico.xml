@@ -46,6 +46,15 @@
             android:background="@drawable/spinner_background"
             android:gravity="center_vertical"
             android:spinnerMode="dropdown"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerFilterResponsavel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown"
             android:layout_marginBottom="16dp"/>
 
         <!-- RecyclerView -->
