@@ -2,21 +2,18 @@ package com.example.pi3.apoio.actions
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 import com.example.pi3.adapters.function_arrow_back
+import com.example.pi3.coordenador.Actions.EditActionArgs
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.DBHelper
 import com.example.pi3.model.Action
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-
+import java.util.*
 
 class EditAction : function_arrow_back() {
 
@@ -43,7 +40,6 @@ class EditAction : function_arrow_back() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializar os campos
         edtTitulo = view.findViewById(R.id.edtTitulo)
         edtDescricao = view.findViewById(R.id.edtDescricao)
         spinnerResponsavel = view.findViewById(R.id.spinnerResponsavel)
@@ -52,30 +48,17 @@ class EditAction : function_arrow_back() {
         edtEndDate = view.findViewById(R.id.edtEndDate)
         btnEnviar = view.findViewById(R.id.btnEnviar)
 
-        // Recuperar os argumentos
         val args = EditActionArgs.fromBundle(requireArguments())
         acaoId = args.acaoId
         pilarSelecionado = args.pilarSelecionado
 
-        // Configurar o spinner de responsáveis (lista de papéis)
         configurarSpinnerResponsavel()
-
-        // Carregar os dados da ação
         carregarDadosDaAcao(acaoId)
 
-        // Configurar os DatePickers
-        edtStartDate.setOnClickListener {
-            mostrarDatePicker(edtStartDate)
-        }
+        edtStartDate.setOnClickListener { mostrarDatePicker(edtStartDate) }
+        edtEndDate.setOnClickListener { mostrarDatePicker(edtEndDate) }
 
-        edtEndDate.setOnClickListener {
-            mostrarDatePicker(edtEndDate)
-        }
-
-        // Configurar o botão Enviar
-        btnEnviar.setOnClickListener {
-            enviarDados()
-        }
+        btnEnviar.setOnClickListener { enviarDados() }
     }
 
     private fun configurarSpinnerResponsavel() {
@@ -84,8 +67,7 @@ class EditAction : function_arrow_back() {
         val papeisUsuarios = mutableListOf("Selecione o responsável")
 
         val cursor = db.rawQuery(
-            "SELECT DISTINCT papel FROM usuario WHERE papel IN ('apoio', 'coordenador')",
-            null
+            "SELECT DISTINCT papel FROM usuario WHERE papel IN ('apoio', 'coordenador')", null
         )
 
         if (cursor.moveToFirst()) {
@@ -102,43 +84,35 @@ class EditAction : function_arrow_back() {
 
     private fun carregarDadosDaAcao(acaoId: Long) {
         val acao = ActionRepository(requireContext()).getActionById(acaoId)
-        if (acao != null) {
-            edtTitulo.setText(acao.titulo)
-            edtDescricao.setText(acao.descricao)
-            edtOrcamento.setText(acao.orcamento.toString())
-            edtStartDate.setText(acao.dataInicio)
-            edtEndDate.setText(acao.dataFim)
+        acao?.let {
+            edtTitulo.setText(it.titulo)
+            edtDescricao.setText(it.descricao)
+            edtOrcamento.setText(it.orcamento.toString())
+            edtStartDate.setText(it.dataInicio)
+            edtEndDate.setText(it.dataFim)
 
-            // Ajustar seleção do spinner para o responsável atual (papel)
             val adapter = spinnerResponsavel.adapter as ArrayAdapter<String>
-            val pos = adapter.getPosition(acao.responsavel)
-            if (pos >= 0) {
-                spinnerResponsavel.setSelection(pos)
-            }
+            val pos = adapter.getPosition(it.responsavel)
+            if (pos >= 0) spinnerResponsavel.setSelection(pos)
         }
     }
 
     private fun mostrarDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
         val datePickerDialog = DatePickerDialog(
             requireContext(),
-            { _, selectedYear, selectedMonth, selectedDay ->
-                val cal = Calendar.getInstance()
-                cal.set(selectedYear, selectedMonth, selectedDay)
-                editText.setText(dateFormat.format(cal.time))  // Formato yyyy-MM-dd
+            { _, year, month, day ->
+                calendar.set(year, month, day)
+                editText.setText(dateFormat.format(calendar.time))
             },
-            year, month, day
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
     }
 
-
     private fun enviarDados() {
-        // Validação básica
         if (pilarSelecionado.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Pilar selecionado inválido", Toast.LENGTH_SHORT).show()
             return
@@ -147,41 +121,76 @@ class EditAction : function_arrow_back() {
         val titulo = edtTitulo.text.toString()
         val descricao = edtDescricao.text.toString()
         val responsavel = spinnerResponsavel.selectedItem.toString()
-        val orcamentoTexto = edtOrcamento.text.toString()
-        val startDate = edtStartDate.text.toString()
-        val endDate = edtEndDate.text.toString()
+        val orcamentoText = edtOrcamento.text.toString()
+        val dataInicio = edtStartDate.text.toString()
+        val dataFim = edtEndDate.text.toString()
+        val orcamento = orcamentoText.toDoubleOrNull() ?: 0.0
 
-        if (titulo.isBlank() || descricao.isBlank() || responsavel == "Selecione o responsável" ||
-            orcamentoTexto.isBlank() || startDate.isBlank() || endDate.isBlank()
-        ) {
-            Toast.makeText(requireContext(), "Preencha todos os campos corretamente", Toast.LENGTH_SHORT).show()
-            return
+        when {
+            titulo.isBlank() -> {
+                edtTitulo.error = "Título é obrigatório"
+                edtTitulo.requestFocus()
+            }
+            responsavel == "Selecione o responsável" -> {
+                Toast.makeText(requireContext(), "Selecione um responsável válido", Toast.LENGTH_SHORT).show()
+            }
+            orcamento < 0.0 -> {
+                edtOrcamento.error = "Orçamento não pode ser negativo"
+                edtOrcamento.requestFocus()
+            }
+            dataInicio.isNotEmpty() && dataFim.isEmpty() -> {
+                edtEndDate.error = "Informe a data de fim"
+                edtEndDate.requestFocus()
+            }
+            dataFim.isNotEmpty() && dataInicio.isEmpty() -> {
+                edtStartDate.error = "Informe a data de início"
+                edtStartDate.requestFocus()
+            }
+            dataInicio.isNotEmpty() && dataFim.isNotEmpty() -> {
+                val datasValidas = try {
+                    val inicio = dateFormat.parse(dataInicio)
+                    val fim = dateFormat.parse(dataFim)
+                    inicio != null && fim != null && fim.after(inicio)
+                } catch (e: Exception) {
+                    false
+                }
+
+                if (!datasValidas) {
+                    Toast.makeText(requireContext(), "Data de fim deve ser posterior à de início", Toast.LENGTH_SHORT).show()
+                    edtEndDate.requestFocus()
+                    return
+                }
+                atualizarAcao(titulo, descricao, responsavel, orcamento, dataInicio, dataFim)
+            }
+            else -> {
+                // Nenhuma data preenchida
+                atualizarAcao(titulo, descricao, responsavel, orcamento, dataInicio, dataFim)
+            }
         }
+    }
 
-        val orcamento = orcamentoTexto.toDoubleOrNull()
-        if (orcamento == null) {
-            Toast.makeText(requireContext(), "Orçamento inválido", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Criar a ação atualizada
+    private fun atualizarAcao(
+        titulo: String,
+        descricao: String,
+        responsavel: String,
+        orcamento: Double,
+        dataInicio: String,
+        dataFim: String
+    ) {
         val acao = Action(
             id = acaoId,
             titulo = titulo,
             descricao = descricao,
             responsavel = responsavel,
             orcamento = orcamento,
-            dataInicio = startDate,
-            dataFim = endDate,
+            dataInicio = dataInicio,
+            dataFim = dataFim,
             pilar = pilarSelecionado!!
         )
 
-        // Atualizar a ação no banco de dados
         ActionRepository(requireContext()).updateAction(acao)
 
         Toast.makeText(requireContext(), "Ação atualizada com sucesso!", Toast.LENGTH_SHORT).show()
-
-        // Voltar para o fragment anterior
         findNavController().navigateUp()
     }
 }
