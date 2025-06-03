@@ -12,7 +12,7 @@
 
 ---
 
-## Instruções de Instalação e Execução *(a definir)*
+## Instruções de Instalação e Execução
 
 [Baixar APK]()
 
@@ -77,11 +77,11 @@ O projeto foi organizado utilizando as convenções padrão do Android Studio, a
 
 ---
 
-## Links para Demais Artefatos Entregues *(a definir)*
+## Links para Demais Artefatos Entregues
 
 > Aqui serão disponibilizados os links para documentos relacionados, como:
 > - [Documento de requisitos](https://www.notion.so/Especifica-o-de-Requisitos-do-Sistema-1b965e19a7b3805e8a66e4fadebe0748)
-> - [Relatório]([https://www.notion.so/Especifica-o-de-Requisitos-do-Sistema-1b965e19a7b3805e8a66e4fadebe0748](https://acute-sternum-e26.notion.site/Relat-rio-Final-Unidade-de-Extens-o-2065d780990580d78c36ecb13f76c625))
+> - [Relatório](https://www.notion.so/Especifica-o-de-Requisitos-do-Sistema-1b965e19a7b3805e8a66e4fadebe0748](https://acute-sternum-e26.notion.site/Relat-rio-Final-Unidade-de-Extens-o-2065d780990580d78c36ecb13f76c625))
 > - [Protótipo](https://www.figma.com/proto/VKRKXyLgakN3exJ1mfqr1s/Projeto-3?node-id=32-6&p=f&t=DGhV8zuVcv1GAs9W-1&scaling=scale-down&content-scaling=fixed&page-id=32%3A3&starting-point-node-id=32%3A6)
 > - [Pesquisa UX](https://miro.com/app/board/uXjVIAXIpJo=/?share_link_id=795294644843)
 
