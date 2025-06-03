@@ -55,7 +55,7 @@
         android:layout_marginHorizontal="80dp"
         android:text="Entrar"
         android:backgroundTint="@color/white"
-        android:textColor="#03A9F4"
+        android:textColor="#0077C2"
         android:padding="18dp"
         android:layout_marginTop="32dp"
         android:textSize="20sp"
