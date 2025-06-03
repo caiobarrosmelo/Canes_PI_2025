@@ -17,11 +17,13 @@ import com.example.pi3.model.Activitie
 import com.example.pi3.model.Action
 import java.text.SimpleDateFormat
 import java.util.*
+import android.widget.Toast
 
 class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListener {
 
     private lateinit var spinnerFilterType: Spinner
     private lateinit var spinnerFilterStatus: Spinner
+    private lateinit var spinnerFilterResponsavel: Spinner
     private lateinit var recyclerViewHistorico: RecyclerView
     private lateinit var activitieRepository: ActivitieRepository
     private lateinit var actionRepository: ActionRepository
@@ -34,6 +36,7 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
 
         spinnerFilterType = findViewById(R.id.spinnerFilterType)
         spinnerFilterStatus = findViewById(R.id.spinnerFilterStatus)
+        spinnerFilterResponsavel = findViewById(R.id.spinnerFilterResponsavel)
         recyclerViewHistorico = findViewById(R.id.recyclerViewHistorico)
         activitieRepository = ActivitieRepository(this)
         actionRepository = ActionRepository(this)
@@ -54,6 +57,11 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
         val statusAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, filterStatusOptions)
         spinnerFilterStatus.adapter = statusAdapter
 
+        // Spinner de Responsável (Todos, Apoio, Coordenador)
+        val filterResponsavelOptions = arrayOf("Todos", "Apoio", "Coordenador")
+        val responsavelAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, filterResponsavelOptions)
+        spinnerFilterResponsavel.adapter = responsavelAdapter
+
         spinnerFilterType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 filterItems()
@@ -73,27 +81,41 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
                 // Não faz nada
             }
         }
+
+        spinnerFilterResponsavel.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                loadAllItems()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Não faz nada
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        historicoAdapter = HistoricoAdapter(listOf(), this) // 'this' refere-se à OnItemClickListener
+        historicoAdapter = HistoricoAdapter(listOf(), this)
         recyclerViewHistorico.layoutManager = LinearLayoutManager(this)
         recyclerViewHistorico.adapter = historicoAdapter
     }
 
     private fun loadAllItems() {
-        val allActivities = activitieRepository.getAllApprovedActivities() // Buscar todas atividades aprovadas
-        val allActions = actionRepository.getAllActions() // Assumindo que existe um método para buscar todas as ações
-
-        // Combinar Ações e Atividades. Talvez seja necessário adicionar uma flag ou tipo para diferenciar.
-        // Por enquanto, vamos apenas combiná-los. O adaptador precisará lidar com os dois tipos.
+        val selectedResponsavel = spinnerFilterResponsavel.selectedItem?.toString() ?: "Todos"
+        val allActions = actionRepository.getAllActions()
+        val allActivities = when (selectedResponsavel) {
+            "Todos" -> activitieRepository.getAllApprovedActivities()
+            "Apoio" -> activitieRepository.getApprovedActivitiesByResponsavel("apoio")
+            "Coordenador" -> activitieRepository.getApprovedActivitiesByResponsavel("coordenador")
+            else -> activitieRepository.getAllApprovedActivities()
+        }
         allItems = allActions + allActivities
-        filterItems() // Aplicar filtros iniciais
+        filterItems()
     }
 
     private fun filterItems() {
         val selectedType = spinnerFilterType.selectedItem.toString()
         val selectedStatus = spinnerFilterStatus.selectedItem.toString()
+        val selectedResponsavel = spinnerFilterResponsavel.selectedItem.toString()
 
         val filteredList = allItems.filter { item ->
             val typeMatch = when (selectedType) {
@@ -105,29 +127,34 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
 
             val statusMatch = when (selectedStatus) {
                 "Tudo" -> true
-                "Concluída" -> if (item is Activitie) item.status == StatusAtividade.CONCLUIDA else false // Ações não tem status 'Concluída'
-                "Em andamento" -> if (item is Activitie) item.status == StatusAtividade.EM_PROCESSO else true // Ações 'em andamento' sempre aparecem em 'Em andamento'
-                "Atrasada" -> if (item is Activitie) item.status == Activitie.STATUS_ATRASADA else false // Assumindo status atrasada para atividade
+                "Concluída" -> if (item is Activitie) item.status == StatusAtividade.CONCLUIDA else false
+                "Em andamento" -> if (item is Activitie) item.status == StatusAtividade.EM_PROCESSO else true
+                "Atrasada" -> if (item is Activitie) isItemAtrasada(item) else false
                 else -> false
             }
 
-            typeMatch && statusMatch
+            val responsavelMatch = when (selectedResponsavel) {
+                "Todos" -> true
+                "Apoio" -> if (item is Activitie) item.responsavel.equals("apoio", ignoreCase = true) else false
+                "Coordenador" -> if (item is Activitie) item.responsavel.equals("coordenador", ignoreCase = true) else false
+                else -> false
+            }
+
+            typeMatch && statusMatch && responsavelMatch
         }
 
         // Ordenar a lista combinada por data (mais recente primeiro)
         val sortedList = filteredList.sortedByDescending { item ->
             when (item) {
                 is Action -> {
-                    // Converter data de String para comparável (assumindo formato yyyy-MM-dd)
-                     try {
-                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.dataFim)?.time ?: 0L
-                     } catch (e: Exception) { 0L }
+                    try {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.dataFim)?.time ?: 0L
+                    } catch (e: Exception) { 0L }
                 }
                 is Activitie -> {
-                     // Converter data de String para comparável (assumindo formato yyyy-MM-dd)
-                     try {
-                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.dataFim)?.time ?: 0L
-                     } catch (e: Exception) { 0L }
+                    try {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.dataFim)?.time ?: 0L
+                    } catch (e: Exception) { 0L }
                 }
                 else -> 0L
             }
@@ -136,15 +163,33 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
         historicoAdapter.updateList(sortedList)
     }
 
+    // Método auxiliar para verificar se um item (Ação ou Atividade) está atrasado
+    private fun isItemAtrasada(item: Any): Boolean {
+        val hoje = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        return when (item) {
+            is Action -> {
+                // Verifica se alguma atividade da ação está atrasada
+                val atividadesDaAcao = actionRepository.getActivitiesByActionId(item.id)
+                atividadesDaAcao.any { it.status != StatusAtividade.CONCLUIDA && dateFormat.parse(it.dataFim)?.before(hoje) == true }
+            }
+            is Activitie -> {
+                // Verifica se a atividade está atrasada
+                item.status != StatusAtividade.CONCLUIDA && dateFormat.parse(item.dataFim)?.before(hoje) == true
+            }
+            else -> false
+        }
+    }
+
     override fun onItemClick(item: Any) {
         // Tratar clique no item (abrir detalhes de Ação ou Atividade)
         when (item) {
             is Action -> {
-                // Abrir tela de detalhes da Ação (se existir)
-                // val intent = Intent(this, ActionDetailActivity::class.java)
-                // intent.putExtra("action_id", item.id)
-                // startActivity(intent)
-                // Toast.makeText(this, "Clique na Ação: ${item.titulo}", Toast.LENGTH_SHORT).show()
+                // Abrir tela de detalhes da Ação
+                val intent = Intent(this, ActionDetailActivity::class.java)
+                intent.putExtra("action_id", item.id)
+                startActivity(intent)
             }
             is Activitie -> {
                 // Abrir tela de detalhes da Atividade

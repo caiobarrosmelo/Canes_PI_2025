@@ -23,6 +23,13 @@ import android.widget.Button
 import android.content.Intent
 import java.util.Calendar
 import com.github.mikephil.charting.components.Legend
+import android.widget.Toast
+import androidx.core.content.FileProvider
+import android.content.pm.PackageManager
+import android.Manifest
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
 
 class Gestor : AppCompatActivity() {
     private lateinit var spinnerPilar: Spinner
@@ -30,6 +37,11 @@ class Gestor : AppCompatActivity() {
     private lateinit var actionRepository: ActionRepository
     private lateinit var btnExportReport: Button
     private lateinit var btnHistory: Button
+    private lateinit var reportGenerator: ReportGenerator
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 123
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +53,7 @@ class Gestor : AppCompatActivity() {
         actionRepository = ActionRepository(this)
         btnExportReport = findViewById(R.id.btnExportReport)
         btnHistory = findViewById(R.id.btnHistory)
+        reportGenerator = ReportGenerator(this)
 
         // Configuração do Spinner de Pilares
         val pilares = arrayOf("Todos", "1. Suporte da alta administração", "2. Instância responsável",
@@ -73,6 +86,81 @@ class Gestor : AppCompatActivity() {
         btnHistory.setOnClickListener {
             val intent = Intent(this, HistoricoActivity::class.java)
             startActivity(intent)
+        }
+
+        // Configuração do botão Exportar Relatório
+        btnExportReport.setOnClickListener {
+            showExportConfirmationDialog()
+        }
+    }
+
+    private fun showExportConfirmationDialog() {
+        val pilarSelecionado = spinnerPilar.selectedItem.toString()
+        AlertDialog.Builder(this)
+            .setTitle("Exportar Relatório")
+            .setMessage("Deseja exportar o relatório do pilar '$pilarSelecionado'?")
+            .setPositiveButton("Sim") { _, _ ->
+                if (checkPermission()) {
+                    exportReport()
+                } else {
+                    requestPermission()
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
+    }
+
+    private fun checkPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                exportReport()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Permissão necessária para exportar o relatório",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun exportReport() {
+        val pilarSelecionado = spinnerPilar.selectedItem.toString()
+        val pdfUri = reportGenerator.generateReport(pilarSelecionado)
+
+        if (pdfUri != null) {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "application/pdf"
+                putExtra(Intent.EXTRA_STREAM, pdfUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, "Compartilhar relatório"))
+        } else {
+            Toast.makeText(
+                this,
+                "Erro ao gerar o relatório",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
