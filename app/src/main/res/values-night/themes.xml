@@ -1,23 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.PI3" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Fonte -->
         <item name="android:fontFamily">@font/sg_regular</item>
 
-        ### Cores Principais (Material 3) ###
+        <!-- Cores iguais ao tema claro -->
         <item name="colorPrimary">@color/azul</item>
         <item name="colorPrimaryVariant">@color/azul</item>
         <item name="colorSecondary">@color/azul</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/azul2</item> <!-- Para preenchimentos suaves -->
+        <item name="colorPrimaryContainer">@color/azul2</item>
 
-        ### Cores do CheckBox (Material 3) ###
-        <!-- Cor do contorno/ícone quando NÃO marcado -->
+        <!-- CheckBox -->
         <item name="colorOutline">@color/azul</item>
-
-        <!-- Cor do ícone/contorno quando marcado -->
         <item name="colorOnSurfaceVariant">@color/azul</item>
-
     </style>
 
+    <style name="Theme.PI3" parent="Base.Theme.PI3" />
 </resources>

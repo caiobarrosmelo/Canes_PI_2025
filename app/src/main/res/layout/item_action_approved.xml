@@ -23,10 +23,10 @@
             android:layout_marginTop="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Ver atividades próximas a expirar"
-            android:src="@drawable/doorbell"
+            android:src="@drawable/alarm_fill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/azul"
+            app:tint="@color/amarelo"
             android:layout_gravity="end"
             />
 
