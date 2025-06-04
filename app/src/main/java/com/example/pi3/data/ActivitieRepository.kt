@@ -10,6 +10,7 @@ import java.util.*
 
 // Constantes para os status das atividades
 object StatusAtividade {
+
     const val PENDENTE_APROVACAO_INICIAL = 0
     const val EM_PROCESSO = 1
     const val PENDENTE_APROVACAO_CONCLUSAO = 2
@@ -252,7 +253,7 @@ class ActivitieRepository(context: Context) {
     fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
-        val thirtyDaysInMillis = System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000 // 30 dias em milissegundos
+        val thirtyDaysInMillis = System.currentTimeMillis()  // 30 dias em milissegundos
 
         val cursor = db.query(
             TableActivities.TABLE_NAME,

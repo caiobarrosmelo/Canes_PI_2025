@@ -23,8 +23,8 @@ class ExpiringActivitiesAdapter(
 
         fun bind(activity: Activitie) {
             txtActivityTitle.text = activity.titulo ?: "Sem título"
-            val daysRemaining = repository.calculateDaysRemaining(activity.dataFim)
-            txtExpirationDays.text = "Expira em $daysRemaining dias"
+           // val daysRemaining = repository.calculateDaysRemaining(activity.dataFim)
+          //  txtExpirationDays.text = "Expira em $daysRemaining dias"
         }
     }
 
