@@ -273,19 +273,16 @@ class ActivitieRepository(context: Context) {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
         val currentDate = Calendar.getInstance()
-        val thirtyDaysLater = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 30) }
-
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDateStr = dateFormat.format(currentDate.time)
-        val thirtyDaysLaterStr = dateFormat.format(thirtyDaysLater.time)
 
-        Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId expirando entre $currentDateStr e $thirtyDaysLaterStr")
+        Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId, in-progress ou expiradas antes de $currentDateStr")
 
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ? AND ${TableActivities.COLUMN_STATUS} != ? AND ${TableActivities.COLUMN_DATA_FIM} BETWEEN ? AND ?", // MODIFIED: Added status filter
-            arrayOf(acaoId.toString(), "1", "1", currentDateStr, thirtyDaysLaterStr), // MODIFIED: Added "1" for status
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND (${TableActivities.COLUMN_STATUS} = ? OR ${TableActivities.COLUMN_DATA_FIM} < ?)",
+            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr),
             null,
             null,
             "${TableActivities.COLUMN_DATA_FIM} ASC"
@@ -301,11 +298,11 @@ class ActivitieRepository(context: Context) {
                 dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
                 dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
                 status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
-                aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1, // MODIFIED: Use Int directly, was == 1
+                aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
                 acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
             )
             activities.add(activity)
-            Log.d("ActivitieRepository", "Atividade encontrada: ID=${activity.id}, Título=${activity.titulo}, DataFim=${activity.dataFim}, Status=${activity.status}") // NEW: Added Status to log
+            Log.d("ActivitieRepository", "Activity: ID=${activity.id}, Title=${activity.titulo}, Status=${activity.status}, DataFim=${activity.dataFim}")
         }
         cursor.close()
         return activities
