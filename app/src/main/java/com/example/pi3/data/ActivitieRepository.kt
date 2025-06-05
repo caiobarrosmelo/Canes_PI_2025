@@ -10,6 +10,7 @@ import java.util.*
 
 // Constantes para os status das atividades
 object StatusAtividade {
+
     const val PENDENTE_APROVACAO_INICIAL = 0
     const val EM_PROCESSO = 1
     const val PENDENTE_APROVACAO_CONCLUSAO = 2
@@ -249,39 +250,6 @@ class ActivitieRepository(context: Context) {
         return rowsAffected > 0
     }
 
-    fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
-        val activities = mutableListOf<Activitie>()
-        val db = dbHelper.readableDatabase
-        val thirtyDaysInMillis = System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000 // 30 dias em milissegundos
-
-        val cursor = db.query(
-            TableActivities.TABLE_NAME,
-            null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND ${TableActivities.COLUMN_APROVADA} = ?",
-            arrayOf(acaoId.toString(), "1"),
-            null,
-            null,
-            null
-        )
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-        while (cursor.moveToNext()) {
-            val activitie = cursorToActivitie(cursor)
-            try {
-                val endDate = dateFormat.parse(activitie.dataFim)
-                if (endDate != null && endDate.time <= thirtyDaysInMillis) {
-                     activities.add(activitie)
-                }
-            } catch (e: Exception) {
-                // Tratar erro de parsing, se necessário
-                Log.e("ActivitieRepository", "Erro ao parsear data: ${activitie.dataFim}", e)
-            }
-        }
-        cursor.close()
-        return activities
-    }
-
     fun getApprovedActivitiesByResponsavel(responsavel: String): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -300,11 +268,61 @@ class ActivitieRepository(context: Context) {
         cursor.close()
         return activities
     }
-}
 
+    fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
+        val activities = mutableListOf<Activitie>()
+        val db = dbHelper.readableDatabase
+        val currentDate = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDateStr = dateFormat.format(currentDate.time)
 
+        Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId, in-progress ou expiradas antes de $currentDateStr")
 
+        val cursor = db.query(
+            TableActivities.TABLE_NAME,
+            null,
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND (${TableActivities.COLUMN_STATUS} = ? OR ${TableActivities.COLUMN_DATA_FIM} < ?)",
+            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr),
+            null,
+            null,
+            "${TableActivities.COLUMN_DATA_FIM} ASC"
+        )
 
+        while (cursor.moveToNext()) {
+            val activity = Activitie(
+                id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
+                titulo = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_TITULO)),
+                descricao = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DESCRICAO)),
+                responsavel = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_RESPONSAVEL)),
+                orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ORCAMENTO)),
+                dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_INICIO)),
+                dataFim = cursor.getString(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_DATA_FIM)),
+                status = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_STATUS)),
+                aprovada = cursor.getInt(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_APROVADA)) == 1,
+                acaoId = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ACAO_ID))
+            )
+            activities.add(activity)
+            Log.d("ActivitieRepository", "Activity: ID=${activity.id}, Title=${activity.titulo}, Status=${activity.status}, DataFim=${activity.dataFim}")
+        }
+        cursor.close()
+        return activities
+    }
+
+    fun calculateDaysRemaining(dataFim: String?): Long {
+        if (dataFim.isNullOrEmpty()) return 0
+        try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val endDate = dateFormat.parse(dataFim) ?: return 0
+            val currentDate = Calendar.getInstance().time
+            val diffMillis = endDate.time - currentDate.time
+            return (diffMillis / (1000 * 60 * 60 * 24)).coerceAtLeast(0)
+        } catch (e: Exception) {
+            Log.e("ActivitieRepository", "Erro ao calcular dias restantes: $e")
+            return 0
+        }
+    }
+
+    }
 
 
 
