@@ -101,7 +101,12 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
 
     private fun loadAllItems() {
         val selectedResponsavel = spinnerFilterResponsavel.selectedItem?.toString() ?: "Todos"
-        val allActions = actionRepository.getAllActions()
+        val allActions = when (selectedResponsavel) {
+            "Todos" -> actionRepository.getAllActions()
+            "Apoio" -> actionRepository.getAllActions().filter { it.responsavel.equals("apoio", ignoreCase = true) }
+            "Coordenador" -> actionRepository.getAllActions().filter { it.responsavel.equals("coordenador", ignoreCase = true) }
+            else -> actionRepository.getAllActions()
+        }
         val allActivities = when (selectedResponsavel) {
             "Todos" -> activitieRepository.getAllApprovedActivities()
             "Apoio" -> activitieRepository.getApprovedActivitiesByResponsavel("apoio")
@@ -135,8 +140,20 @@ class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListe
 
             val responsavelMatch = when (selectedResponsavel) {
                 "Todos" -> true
-                "Apoio" -> if (item is Activitie) item.responsavel.equals("apoio", ignoreCase = true) else false
-                "Coordenador" -> if (item is Activitie) item.responsavel.equals("coordenador", ignoreCase = true) else false
+                "Apoio" -> {
+                    when (item) {
+                        is Activitie -> item.responsavel.equals("apoio", ignoreCase = true)
+                        is Action -> item.responsavel.equals("apoio", ignoreCase = true)
+                        else -> false
+                    }
+                }
+                "Coordenador" -> {
+                    when (item) {
+                        is Activitie -> item.responsavel.equals("coordenador", ignoreCase = true)
+                        is Action -> item.responsavel.equals("coordenador", ignoreCase = true)
+                        else -> false
+                    }
+                }
                 else -> false
             }
 
