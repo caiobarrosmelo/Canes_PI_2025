@@ -33,31 +33,31 @@
 
 ## Estrutura do Projeto
 
-O projeto foi organizado utilizando as convenções padrão do Android Studio, além de subdivisões próprias para melhor organização do código. A estrutura principal é composta por:
-
+ O projeto está organizado em pacotes que refletem as responsabilidades de cada componente do sistema, seguindo uma abordagem modular e coesa. A estrutura do projeto é apresentada abaixo:
+ 
 - **`manifests/`**  
   Contém o arquivo `AndroidManifest.xml`, responsável pelas declarações de permissões, atividades e configurações principais do app.
 
 - **`java/com.example.pi3/`**  
   Contém o código-fonte em Kotlin, organizado nos seguintes pacotes:
-  - **`adapters/`** – Adaptadores para RecyclerViews ou outros componentes de lista.
-  - **`apoio/`** – Classes auxiliares e utilitárias.
-  - **`coordenador/`** – Gerencia o fluxo de navegação ou controle de dados e processos.
-  - **`data/`** – Manipulação de dados, como acesso a banco, APIs ou repositórios.
-  - **`gestor/`** – Classes responsáveis pela lógica de negócios ou regras da aplicação.
-  - **`listeners/`** – Interfaces para tratamento de eventos e callbacks.
-  - **`model/`** – Modelos de dados, geralmente implementados como `data class` para representar as entidades da aplicação.
-  - **`MainActivity.kt`** – Atividade principal do app que inicializa a aplicação.
+  - **`adapters/`** – Adapters usados em RecyclerViews para listar ações e atividades.
+  - **`apoio/`** –  Telas (Activities) e lógica de navegação para usuários do tipo Apoio.
+  - **`coordenador/`** – Telas (Activities) específicas do Coordenador.
+  - **`gestor/`** – Interface de visualização geral e geração de relatórios (Gestor).
+  - **`data/`** – Lógica de persistência local com SQLite (DBHelper).
+  - **`listeners/`** – Interfaces de callback entre Fragments e Activities.
+  - **`model/`** – Entidades de domínio como Action, Activity, UserRole, etc.
+  - **`MainActivity.kt`** – Tela de login e redirecionamento por tipo de usuário.
 
 - **`res/`**  
   Pasta de recursos visuais e de configuração do app:
   - **`layout/`** – Arquivos XML responsáveis pela construção das telas e componentes da interface.
   - **`drawable/`** – Imagens, vetores, formas e outros recursos gráficos.
-  - **`color/`** – Definição das cores utilizadas no app.
+  - **`color/`** – Efeito de troca de cor no menu inferior.
   - **`font/`** – Fontes personalizadas usadas na interface.
   - **`menu/`** – Arquivos XML de menus da aplicação.
   - **`mipmap/`** – Ícones do aplicativo em diferentes resoluções.
-  - **`navigation/`** – Arquivos de navegação (caso use Navigation Component).
+  - **`navigation/`** – Arquivos de navegação.
   - **`values/`** – Arquivos como `strings.xml` (textos), `themes.xml` (temas) e `colors.xml` (cores).
   - **`xml/`** – Arquivos de configuração diversos (ex.: preferências, estilos personalizados).
 
