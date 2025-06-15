@@ -32,12 +32,16 @@
                 android:layout_centerVertical="true"/>
 
             <TextView
-                android:id="@+id/textViewLogout"
+                android:id="@+id/btnLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sair →"
+                android:text="Sair"
+                android:drawableEnd="@drawable/logout"
+                android:drawableTint="@color/white"
                 android:textColor="@android:color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:drawablePadding="6dp"
+                android:padding="4dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:clickable="true"

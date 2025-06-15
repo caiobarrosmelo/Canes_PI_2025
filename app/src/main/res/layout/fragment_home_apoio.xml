@@ -7,29 +7,57 @@
     android:background="@drawable/login_background"
     android:padding="16dp">
 
-    <!-- Saudação -->
-    <TextView
-        android:id="@+id/textViewGreeting"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Olá, Apoio"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Instruções -->
+        <!-- Saudação -->
+        <TextView
+            android:id="@+id/textViewGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Olá, Apoio"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Botão Sair -->
+        <TextView
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sair"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/logout"
+            android:drawableTint="@color/white"
+            android:drawablePadding="6dp"
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Instruções abaixo -->
     <TextView
         android:id="@+id/textInstrucoes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Selecione um pilar e depois clique na ação para cadastrar uma atividade."
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewGreeting"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

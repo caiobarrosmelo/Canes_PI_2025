@@ -59,6 +59,13 @@ class HomeApoioFragment : Fragment(),
             findNavController().navigate(action)
         }
 
+        val btnLogout: View = view.findViewById(R.id.btnLogout)
+        btnLogout.setOnClickListener {
+            // Voltar para a MainActivity (tela de login)
+            val intent = android.content.Intent(requireContext(), com.example.pi3.MainActivity::class.java)
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
 
     }
 
