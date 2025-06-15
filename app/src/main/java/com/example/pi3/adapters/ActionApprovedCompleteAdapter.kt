@@ -16,6 +16,8 @@ import com.example.pi3.listeners.OnActivityStatusChangedListener
 import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 
+
+//Componente completo da ação
 class ActionApprovedCompleteAdapter(
      private val action: Action,
      private val repository: ActionRepository,
@@ -47,6 +49,7 @@ class ActionApprovedCompleteAdapter(
             }
         }
 
+        //lógica da barra de progresso
         fun updateProgress() {
             val atividades = repository.getActivitiesByActionId(action.id)
             val total = atividades.size

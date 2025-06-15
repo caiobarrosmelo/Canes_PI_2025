@@ -22,6 +22,7 @@ import com.example.pi3.listeners.OnDetailsActivityClicked
 import com.example.pi3.model.Activitie
 
 
+//lógica do componente da visualização da atividade
 class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnClickToEditActionListener{
 
     private lateinit var recyclerViewAction: RecyclerView
@@ -87,11 +88,10 @@ class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnCl
         carregarAtividades(acaoId)
     }
 
-
+// Cria o adaptador de ação
     private fun carregarAcao(acaoId: Long) {
         val acao = repositoryAction.getActionById(acaoId)
         if (acao != null) {
-            // Cria o adaptador de ação
             val actionAdapter = ActionApprovedCompleteAdapter(acao, repositoryAction, this)
             recyclerViewAction.adapter = actionAdapter
             // Atualiza o adaptador de atividades com o actionAdapter como listener
@@ -104,6 +104,7 @@ class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnCl
         }
     }
 
+    // cria o adaptador das atividades
     private fun carregarAtividades(acaoId: Long) {
         val atividadesAprovadas = repositoryActivity.getActivitiesApprovedByActionId(acaoId)
         Log.d("ActivitiesApproved", "Carregando atividades: ${atividadesAprovadas.size} encontradas para acaoId=$acaoId")
@@ -121,7 +122,7 @@ class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnCl
         }
     }
 
-
+//botão para editar a ação
     override fun onEditarAcaoClicked(acaoId: Long) {
 
         val action = ActivitiesApprovedDirections.actionActivitiesApprovedToEditAction(pilarSelecionado!!, acaoId)
@@ -129,6 +130,7 @@ class ActivitiesApproved : function_arrow_back(), OnDetailsActivityClicked, OnCl
 
        }
 
+    //função para navegar até a página onde se pode ver todas as informações da atividade
     override fun onActivityViewClicked(activityId: Long) {
 
         val action = ActivitiesApprovedDirections.actionActivitiesApprovedToActivityView(activityId)

@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import android.app.DatePickerDialog
 import java.util.*
 
+//Classe que registra as ações no fluxo do coordenador
 class ActionRegisterFragment : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText
@@ -130,6 +131,8 @@ class ActionRegisterFragment : function_arrow_back() {
         }
     }
 
+
+    // função para salvar a ação no banco de dados
     private fun salvarAction(
         titulo: String,
         descricao: String,
@@ -156,6 +159,7 @@ class ActionRegisterFragment : function_arrow_back() {
         findNavController().popBackStack()
     }
 
+    //calendário para definir as datas de início e fim da ação
     private fun showDatePickerDialog(targetEditText: EditText) {
         val calendar = Calendar.getInstance()
         DatePickerDialog(

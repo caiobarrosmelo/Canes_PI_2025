@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.pi3.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+//classe que renderiza o menu e as páginas do fluxo do corrdenador
 class CoordenadorActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController

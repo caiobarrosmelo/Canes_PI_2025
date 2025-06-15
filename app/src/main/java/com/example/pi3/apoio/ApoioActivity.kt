@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.pi3.R
 
 
+//Classe que renderiza a visualização do fluxo do apoio
 class ApoioActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController

@@ -13,6 +13,7 @@ import com.example.pi3.listeners.OnActivityStatusChangedListener
 import com.example.pi3.listeners.OnDetailsActivityClicked
 import com.example.pi3.model.Activitie
 
+//Componente das atividades aprovadas
 class ActivitieApprovedAdapter(
     private val activities: List<Activitie>,
     private val repository: ActivitieRepository,

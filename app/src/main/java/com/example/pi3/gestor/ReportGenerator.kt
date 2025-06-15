@@ -22,6 +22,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+//classe que renderiza o gráfico de visualização esquemática dos dados
 class ReportGenerator(private val context: Context) {
     private val actionRepository = ActionRepository(context)
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

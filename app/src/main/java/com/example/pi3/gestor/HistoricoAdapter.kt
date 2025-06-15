@@ -14,6 +14,7 @@ import com.example.pi3.model.Action
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+//Classe que renderiza o componente responsável pela visualização das informações das atividades  e ações
 class HistoricoAdapter(private var items: List<Any>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {

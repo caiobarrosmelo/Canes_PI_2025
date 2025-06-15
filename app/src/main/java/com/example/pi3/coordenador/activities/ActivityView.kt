@@ -44,6 +44,7 @@ class ActivityView : function_arrow_back(), OnDeleteActivity {
 
     }
 
+    //função para carregar as atividades
     private fun carregarAtividade(activityId: Long) {
         val atividade = repositoryActivity.getActivityById(activityId)
         if (atividade != null) {
@@ -56,7 +57,7 @@ class ActivityView : function_arrow_back(), OnDeleteActivity {
         }
     }
 
-
+//função para deletar as atividades
     override fun onDeleteActivityClicked(activityId: Long) {
         AlertDialog.Builder(requireContext())
             .setTitle("Confirmar Exclusão")

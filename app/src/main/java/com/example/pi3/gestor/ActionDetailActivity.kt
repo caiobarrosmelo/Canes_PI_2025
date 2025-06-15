@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.pi3.R
 import com.example.pi3.data.ActionRepository
 
+//Classe que renderiza a visualização das ações no fluxo do gestor
 class ActionDetailActivity : AppCompatActivity() {
 
     private lateinit var textViewActionDetailTitle: TextView

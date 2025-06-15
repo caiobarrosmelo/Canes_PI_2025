@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pi3.R
 import com.example.pi3.model.Action
 
+//Componente das ações que ainda não foram aprovadas
 class ActionUnapprovedAdapter(
     private val actions: MutableList<Action>,
     private val onAprovarClick: (Action) -> Unit,

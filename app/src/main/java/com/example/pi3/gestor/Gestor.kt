@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 
+//classe que renderiza a lógica do fluxo do gestor
 class Gestor : AppCompatActivity() {
     private lateinit var spinnerPilar: Spinner
     private lateinit var pieChartAcoes: PieChart

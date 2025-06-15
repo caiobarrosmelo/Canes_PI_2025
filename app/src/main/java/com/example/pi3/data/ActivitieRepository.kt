@@ -19,10 +19,13 @@ object StatusAtividade {
     const val REJEITADA_INICIAL = 5
 }
 
+
+//Classe que define os metodos de CRUD das atividades
 class ActivitieRepository(context: Context) {
 
     private val dbHelper = DBHelper(context)
 
+    //método para criar uma nova atividade
     fun insertActivitie(activitie: Activitie): Long {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -42,6 +45,7 @@ class ActivitieRepository(context: Context) {
         return newRowId
     }
 
+
     private fun cursorToActivitie(cursor: android.database.Cursor): Activitie {
          return Activitie(
             id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
@@ -57,6 +61,7 @@ class ActivitieRepository(context: Context) {
         )
     }
 
+    //método para buscar as atividades ainda não aprovadas
     fun getActivitiesPendingApproval(): List<Activitie> {
         val db = dbHelper.readableDatabase
         val cursor = db.query(
@@ -77,6 +82,7 @@ class ActivitieRepository(context: Context) {
         }
         return lista
     }
+
 
     fun getActivitiesPendingCompletionApproval(): List<Activitie> {
         val db = dbHelper.readableDatabase
@@ -99,6 +105,7 @@ class ActivitieRepository(context: Context) {
         return lista
     }
 
+    //Método para buscar as atividades por ação
     fun getActivitiesApprovedByActionId(acaoId: Long): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -118,6 +125,7 @@ class ActivitieRepository(context: Context) {
         return activities
     }
 
+    //método para pegar todas as atividades aprovadas
     fun getAllApprovedActivities(): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -137,6 +145,7 @@ class ActivitieRepository(context: Context) {
         return activities
     }
 
+    //método para atualizar o status da atividade por Id
     fun updateActivitieStatus(id: Long, status: Int): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -167,6 +176,7 @@ class ActivitieRepository(context: Context) {
         return rowsUpdated > 0
     }
 
+    //Método para aprovar atividade
     fun aprovarAtividadeInicial(id: Long): Boolean {
         // Marca como aprovada (aprovada = 1) e define status para EM_PROCESSO
         val db = dbHelper.writableDatabase
@@ -185,6 +195,7 @@ class ActivitieRepository(context: Context) {
     }
 
 
+    //método para desaprovar atividade
     fun desaprovarAtividadeInicial(id: Long): Boolean {
         // Marca como não aprovada (aprovada = 0) e define status para REJEITADA_INICIAL
          val db = dbHelper.writableDatabase
@@ -207,16 +218,19 @@ class ActivitieRepository(context: Context) {
         return updateActivitieStatus(id, StatusAtividade.PENDENTE_APROVACAO_CONCLUSAO)
     }
 
+    //método para marcar a atividade como concluída
     fun aprovarConclusaoAtividade(id: Long): Boolean {
         // Marca status como CONCLUIDA (aprovada já deve ser 1)
         return updateActivitieStatus(id, StatusAtividade.CONCLUIDA)
     }
 
+    //método para marcar a atividade como não concluída
     fun rejeitarConclusaoAtividade(id: Long): Boolean {
         // Marca status como REJEITADA_CONCLUSAO, voltando para EM_PROCESSO (aprovada já deve ser 1)
         return updateActivitieStatus(id, StatusAtividade.EM_PROCESSO)
     }
 
+    //método para buscar a atividade por id
     fun getActivityById(id: Long): Activitie? {
         val db = dbHelper.readableDatabase
         val cursor = db.query(
@@ -239,6 +253,7 @@ class ActivitieRepository(context: Context) {
         }
     }
 
+   // método para deletar a atividade por id
     fun deleteActivityById(id: Long): Boolean {
         val db = dbHelper.writableDatabase
         val rowsAffected = db.delete(
@@ -250,6 +265,7 @@ class ActivitieRepository(context: Context) {
         return rowsAffected > 0
     }
 
+    // método para aprovar a atividade por responsável
     fun getApprovedActivitiesByResponsavel(responsavel: String): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -269,6 +285,7 @@ class ActivitieRepository(context: Context) {
         return activities
     }
 
+    // método para buscar as atividades expiradas pelo id da ação
     fun getExpiringActivitiesByActionId(acaoId: Long): List<Activitie> {
         val activities = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -276,18 +293,22 @@ class ActivitieRepository(context: Context) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDateStr = dateFormat.format(currentDate.time)
 
+        currentDate.add(Calendar.DAY_OF_YEAR, 30)
+        val thirtyDaysAgo = dateFormat.format(currentDate.time)
+
         Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId, in-progress ou expiradas antes de $currentDateStr")
 
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND (${TableActivities.COLUMN_STATUS} = ? OR ${TableActivities.COLUMN_DATA_FIM} < ?)",
-            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr),
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND ( " +
+                    "(${TableActivities.COLUMN_STATUS} = ? AND ${TableActivities.COLUMN_DATA_FIM} BETWEEN ? AND ?) " +
+                    "OR ${TableActivities.COLUMN_DATA_FIM} < ? )",
+            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr, thirtyDaysAgo, currentDateStr),
             null,
             null,
             "${TableActivities.COLUMN_DATA_FIM} ASC"
         )
-
         while (cursor.moveToNext()) {
             val activity = Activitie(
                 id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
@@ -308,6 +329,7 @@ class ActivitieRepository(context: Context) {
         return activities
     }
 
+    //método para calcular os dias que ainda restam das atividades ainda não concluidas
     fun calculateDaysRemaining(dataFim: String?): Long {
         if (dataFim.isNullOrEmpty()) return 0
         try {

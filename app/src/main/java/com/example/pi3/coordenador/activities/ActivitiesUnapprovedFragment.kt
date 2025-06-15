@@ -17,6 +17,7 @@ import com.example.pi3.data.StatusAtividade
 import com.example.pi3.adapters.ActivitieUnapprovedAdapter
 import com.example.pi3.model.Activitie
 
+//lógica do componente que carrega as atividas ainda não aprovadas
 class ActivitiesUnapprovedFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
@@ -112,6 +113,7 @@ class ActivitiesUnapprovedFragment : Fragment() {
             }
         }
     }
+
 
     private fun atualizarListaPorModo() {
         when (modoAtual) {

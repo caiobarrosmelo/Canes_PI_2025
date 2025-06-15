@@ -1,5 +1,6 @@
 package com.example.pi3.data
 
+//representação do objeto usuário
 object TableUsers {
     const val TABLE_NAME = "usuario"
     const val COLUMN_ID = "id"

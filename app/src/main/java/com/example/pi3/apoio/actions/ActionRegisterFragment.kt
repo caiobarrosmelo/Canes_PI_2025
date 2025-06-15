@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import android.app.DatePickerDialog
 import java.util.*
 
+//Lógica da página que registra as ações no fluxo do apoio
 class ActionRegisterFragment : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText

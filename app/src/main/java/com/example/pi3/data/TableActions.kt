@@ -1,5 +1,6 @@
 package com.example.pi3.data
 
+//representação do objeto ação
 object TableActions {
     const val TABLE_NAME = "actions"
     const val COLUMN_ID = "id"
