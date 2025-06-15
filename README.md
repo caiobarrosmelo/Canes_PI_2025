@@ -14,7 +14,7 @@
 
 ## Instruções de Instalação e Execução
 
-[Baixar APK]()
+[Baixar APK](https://github.com/caiobarrosmelo/Canes_PI_2025/releases/tag/apk)
 
 1. No seu celular, acesse o link acima e faça o download do arquivo APK.
 2. Quando o download for concluído, toque no arquivo APK para iniciar a instalação.
