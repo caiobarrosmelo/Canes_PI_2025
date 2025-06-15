@@ -276,18 +276,22 @@ class ActivitieRepository(context: Context) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDateStr = dateFormat.format(currentDate.time)
 
+        currentDate.add(Calendar.DAY_OF_YEAR, 30)
+        val thirtyDaysAgo = dateFormat.format(currentDate.time)
+
         Log.d("ActivitieRepository", "Buscando atividades para acaoId=$acaoId, in-progress ou expiradas antes de $currentDateStr")
 
         val cursor = db.query(
             TableActivities.TABLE_NAME,
             null,
-            "${TableActivities.COLUMN_ACAO_ID} = ? AND (${TableActivities.COLUMN_STATUS} = ? OR ${TableActivities.COLUMN_DATA_FIM} < ?)",
-            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr),
+            "${TableActivities.COLUMN_ACAO_ID} = ? AND ( " +
+                    "(${TableActivities.COLUMN_STATUS} = ? AND ${TableActivities.COLUMN_DATA_FIM} BETWEEN ? AND ?) " +
+                    "OR ${TableActivities.COLUMN_DATA_FIM} < ? )",
+            arrayOf(acaoId.toString(), Activitie.STATUS_EM_ANDAMENTO.toString(), currentDateStr, thirtyDaysAgo, currentDateStr),
             null,
             null,
             "${TableActivities.COLUMN_DATA_FIM} ASC"
         )
-
         while (cursor.moveToNext()) {
             val activity = Activitie(
                 id = cursor.getLong(cursor.getColumnIndexOrThrow(TableActivities.COLUMN_ID)),
