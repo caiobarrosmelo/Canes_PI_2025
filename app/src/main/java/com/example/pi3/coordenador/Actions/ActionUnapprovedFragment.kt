@@ -16,7 +16,7 @@ import com.example.pi3.adapters.setupPilarSpinner
 import com.example.pi3.data.ActionRepository
 import com.example.pi3.model.Action
 
-
+//página da visualização das ações ainda não aprovadas do coordenador
 class ActionUnapprovedFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView

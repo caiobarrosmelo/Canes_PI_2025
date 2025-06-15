@@ -11,7 +11,7 @@ import com.example.pi3.R
 import com.example.pi3.data.ActivitieRepository
 import com.example.pi3.model.Activitie
 
-
+//componente das notificações referentes às atividades pendentes das ações
 class ExpiringActivitiesAdapter(
     private val activities: List<Activitie>,
     private val repository: ActivitieRepository

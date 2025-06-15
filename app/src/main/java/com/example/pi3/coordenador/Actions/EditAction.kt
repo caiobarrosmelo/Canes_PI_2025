@@ -14,6 +14,7 @@ import com.example.pi3.model.Action
 import java.text.SimpleDateFormat
 import java.util.*
 
+//página que edita as ações aprovadas no fluxo do coordenador
 class EditAction : function_arrow_back() {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

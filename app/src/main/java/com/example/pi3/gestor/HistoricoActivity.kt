@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.Toast
 
+//Classe que renderiza o histórico de atividades no fluxo do gestor
 class HistoricoActivity : AppCompatActivity(), HistoricoAdapter.OnItemClickListener {
 
     private lateinit var spinnerFilterType: Spinner

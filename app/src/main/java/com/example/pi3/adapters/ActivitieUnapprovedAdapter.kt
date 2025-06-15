@@ -13,6 +13,7 @@ import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 
 
+//Componente das atividades ainda não aprovadas
 class ActivitieUnapprovedAdapter(
 
     private val activities: MutableList<Activitie>,

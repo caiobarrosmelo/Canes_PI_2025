@@ -17,6 +17,7 @@ import com.example.pi3.model.Activitie
 import java.text.SimpleDateFormat
 import java.util.*
 
+//lógica do formulário de registro de atividades do coordenador
 class ActivitieRegister : function_arrow_back() {
 
     private lateinit var edtTitulo: EditText
@@ -126,6 +127,7 @@ class ActivitieRegister : function_arrow_back() {
         }
     }
 
+    // função para salvar a atividade no banco de dados
     private fun salvarAtividade(
         titulo: String,
         descricao: String,
@@ -152,6 +154,7 @@ class ActivitieRegister : function_arrow_back() {
         findNavController().popBackStack()
     }
 
+    //calendário para definir as datas de início e fim da atividade
     private fun showDatePickerDialog(targetEditText: EditText) {
         val calendar = Calendar.getInstance()
         DatePickerDialog(

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 
 
+//Componente do botão de voltar
 abstract class function_arrow_back : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

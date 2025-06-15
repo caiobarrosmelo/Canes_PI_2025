@@ -15,6 +15,7 @@ import com.example.pi3.model.Action
 import java.text.SimpleDateFormat
 import java.util.*
 
+//Lógica da página que edita as ações aprovadas
 class EditAction : function_arrow_back() {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -61,6 +62,7 @@ class EditAction : function_arrow_back() {
         btnEnviar.setOnClickListener { enviarDados() }
     }
 
+    //spinner para selecionar o responsável pela ação
     private fun configurarSpinnerResponsavel() {
         val dbHelper = DBHelper(requireContext())
         val db = dbHelper.readableDatabase
@@ -82,6 +84,8 @@ class EditAction : function_arrow_back() {
         spinnerResponsavel.adapter = adapter
     }
 
+
+    //função que carrega os dados já registrados da ação que vai ser editada
     private fun carregarDadosDaAcao(acaoId: Long) {
         val acao = ActionRepository(requireContext()).getActionById(acaoId)
         acao?.let {
@@ -97,6 +101,7 @@ class EditAction : function_arrow_back() {
         }
     }
 
+    //função para definir datas através do calendário
     private fun mostrarDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
@@ -169,6 +174,7 @@ class EditAction : function_arrow_back() {
         }
     }
 
+    //função que atualiza a ação
     private fun atualizarAcao(
         titulo: String,
         descricao: String,

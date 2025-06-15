@@ -15,7 +15,7 @@ import com.example.pi3.coordenador.CoordenadorActivity
 import com.example.pi3.gestor.Gestor
 import com.example.pi3.data.UserRepository
 
-
+//classe responsável por renderizar a tela de login
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -10,6 +10,7 @@ import com.example.pi3.R
 import com.example.pi3.listeners.OnDeleteActivity
 import com.example.pi3.model.Activitie
 
+//Componente que exibe todas as informações das atividades já aprovadas
 class ActivityApprovedCompleteAdapter(
     private val activity: Activitie,
     private val listener: OnDeleteActivity? = null // Torna opcional

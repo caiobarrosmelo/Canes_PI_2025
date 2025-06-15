@@ -18,6 +18,7 @@ import com.example.pi3.data.ActivitieRepository
 import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 
+//Componente da ação
 class ActionApprovedAdapter(
     private val actions: List<Action>,
     private val repository: ActionRepository,
@@ -58,6 +59,8 @@ class ActionApprovedAdapter(
             }
 
         }
+
+        //Visualização das notificações
         private fun showExpiringActivitiesDialog(acaoId: Long) {
             val context = itemView.context
             val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_dialog_expiring_activities, null)

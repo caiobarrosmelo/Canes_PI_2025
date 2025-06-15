@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import com.example.pi3.model.UserRole
 
+//classe que define os métodos que manipulam a tabela usuário
 class UserRepository(context: Context) {
     private val dbHelper = DBHelper(context)
 

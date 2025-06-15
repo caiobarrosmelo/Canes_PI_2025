@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.pi3.model.Action
 import com.example.pi3.model.Activitie
 
+//Classe que define os métodos de Crud das ações
 class ActionRepository(context: Context) {
 
     private val dbHelper = DBHelper(context)
@@ -97,7 +98,7 @@ class ActionRepository(context: Context) {
         return lista
     }
 
-
+//método para buscar as ações ainda não aprovadas
     fun getUnapprovedActions(): List<Action> {
         val lista = mutableListOf<Action>()
         val db = dbHelper.readableDatabase
@@ -127,7 +128,7 @@ class ActionRepository(context: Context) {
     }
 
 
-
+//método para buscar as ações aprovadas por Pillar
     fun getApprovedActionsByPillar(pilar: String): List<Action> {
         val lista = mutableListOf<Action>()
         val db = dbHelper.readableDatabase
@@ -157,6 +158,7 @@ class ActionRepository(context: Context) {
     }
 
 
+    //método para aprovar ação
     fun aprovarAcao(id: Long): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -172,6 +174,7 @@ class ActionRepository(context: Context) {
         return rowsUpdated > 0
     }
 
+    //método para recusar a ação
     fun recusarAcao(id: Long): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -187,6 +190,7 @@ class ActionRepository(context: Context) {
         return rowsUpdated > 0
     }
 
+    //método para buscar as atividades por ação
     fun getActivitiesByActionId(acaoId: Long): List<Activitie> {
         val atividades = mutableListOf<Activitie>()
         val db = dbHelper.readableDatabase
@@ -220,6 +224,7 @@ class ActionRepository(context: Context) {
         return atividades
     }
 
+    //método para criar uma ação
     fun insertAction(action: Action) {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -235,6 +240,7 @@ class ActionRepository(context: Context) {
         db.insert("actions", null, values)
     }
 
+    //método para atualizar a ação
     fun updateAction(action: Action) {
         val db = dbHelper.writableDatabase
         val contentValues = ContentValues().apply {
@@ -266,6 +272,7 @@ class ActionRepository(context: Context) {
         db.close()
     }
 
+    //método para buscar uma ação por Id
     fun getActionById(id: Long): Action? {
         val db = dbHelper.readableDatabase
 

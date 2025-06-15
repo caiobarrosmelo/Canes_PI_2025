@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import androidx.navigation.fragment.findNavController
 import com.example.pi3.R
 
-
+//Componente do botão de voltar
 abstract class function_arrow_back_view : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

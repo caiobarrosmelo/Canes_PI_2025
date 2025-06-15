@@ -1,5 +1,6 @@
 package com.example.pi3.model
 
+//enum responsável pela definição dos papéis do usuário
 enum class UserRole(val senhaPadrao: String) {
     APOIO("123"),
     COORDENADOR("123"),

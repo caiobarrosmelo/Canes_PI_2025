@@ -15,6 +15,8 @@ import java.util.Date
 import java.util.Locale
 import com.example.pi3.data.ActionRepository
 
+
+//classe que manipula os dados das tividades no fluxo do gestor
 class ActivitieDetailActivity : AppCompatActivity() {
 
     private lateinit var textViewActivitieDetailTitle: TextView

@@ -6,6 +6,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 
+//Componente do Pilar
 fun setupPilarSpinner(
     context: Context,
     spinner: Spinner,

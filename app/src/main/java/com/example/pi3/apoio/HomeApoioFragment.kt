@@ -18,6 +18,7 @@ import com.example.pi3.data.ActionRepository
 import com.example.pi3.data.ActivitieRepository
 
 
+//Página inicial do apoio
 class HomeApoioFragment : Fragment(),
     OnClickToActionDetailsListener {
 
@@ -61,6 +62,7 @@ class HomeApoioFragment : Fragment(),
 
     }
 
+    //Carrega os componentes das ações aprovadas
     private fun carregarAcoesAprovadas(pilar: String) {
         val acoes = repository.getApprovedActionsByPillar(pilar)
         recyclerView.adapter = ActionApprovedAdapter(
@@ -69,7 +71,7 @@ class HomeApoioFragment : Fragment(),
             )
     }
 
-
+//função para navegar até a página onde todos os detalhes das ações e suas atividades são exibidos
     override fun onDetailsActionClicked(acaoId: Long){
         val pilarSelecionado = spinnerPilar.selectedItem.toString()
         val action = HomeApoioFragmentDirections.actionHomeApoioToActivitiesApproved(pilarSelecionado, acaoId)

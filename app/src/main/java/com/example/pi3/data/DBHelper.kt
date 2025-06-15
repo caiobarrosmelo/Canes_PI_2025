@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+//classe responsável pela criação e manipulação do banco de dados
 class DBHelper(context: Context) : SQLiteOpenHelper(
     context, "seuprojeto.db", null, 2
 ) {

@@ -1,5 +1,6 @@
 package com.example.pi3.model
 
+//classe que modula os dados do objeto atividade no código
 data class Activitie(
     val id: Long = 0,
     val titulo: String,
